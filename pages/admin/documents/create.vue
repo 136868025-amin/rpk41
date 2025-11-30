@@ -1,0 +1,91 @@
+<template>
+    <NuxtLayout name="admin">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold text-slate-800">Upload Document</h1>
+                <NuxtLink to="/admin/documents" class="text-slate-500 hover:text-slate-700">
+                    Cancel
+                </NuxtLink>
+            </div>
+
+            <form @submit.prevent="handleSubmit" class="space-y-6">
+                <!-- Title -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Document Title</label>
+                    <input v-model="form.title" type="text" required
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Category</label>
+                    <select v-model="form.category"
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="form">Form (แบบฟอร์ม)</option>
+                        <option value="regulation">Regulation (ระเบียบการ)</option>
+                        <option value="academic">Academic (วิชาการ)</option>
+                        <option value="other">Other (อื่นๆ)</option>
+                    </select>
+                </div>
+
+                <!-- File Upload -->
+                <AppFileUploader v-model="form.filePath" label="Document File" accept=".pdf,.doc,.docx,.xls,.xlsx" />
+
+                <!-- Submit Button -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105"
+                        :disabled="submitting">
+                        {{ submitting ? 'Uploading...' : 'Save Document' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </NuxtLayout>
+</template>
+
+<script setup lang="ts">
+import AppFileUploader from '~/components/AppFileUploader.vue'
+
+definePageMeta({
+    middleware: 'auth'
+})
+
+const router = useRouter()
+const { showAlert } = useAlert()
+const submitting = ref(false)
+
+const form = ref<any>({
+    title: '',
+    category: 'other',
+    filePath: '',
+    fileType: 'pdf', // Will be updated on submit or file change
+    isPublished: true
+})
+
+const handleSubmit = async () => {
+    if (!form.value.filePath) {
+        showAlert('Please upload a file', 'warning')
+        return
+    }
+
+    submitting.value = true
+
+    // Auto-detect file type from extension
+    const ext = form.value.filePath.split('.').pop()
+    form.value.fileType = ext || 'file'
+
+    try {
+        await $fetch('/api/documents', {
+            method: 'POST',
+            body: form.value
+        })
+        showAlert('Document uploaded successfully', 'success')
+        router.push('/admin/documents')
+    } catch (e: any) {
+        showAlert(e.data?.message || 'Failed to save', 'error')
+    } finally {
+        submitting.value = false
+    }
+}
+</script>
