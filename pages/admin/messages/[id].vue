@@ -78,30 +78,32 @@ const router = useRouter()
 const { showAlert } = useAlert()
 const id = route.params.id as string
 
-const loading = ref(true)
-const message = ref<any>(null)
+interface ContactMessage {
+    _id: string
+    name: string
+    email: string
+    subject: string
+    message: string
+    createdAt: string
+    isRead: boolean
+}
 
-onMounted(async () => {
-    try {
-        const res: any = await $fetch(`/api/contact/${id}`)
-        message.value = res.data
-    } catch (e) {
-        showAlert('Message not found', 'error')
-        router.push('/admin/messages')
-    } finally {
-        loading.value = false
-    }
-})
+const { data: message, pending: loading, error } = await useFetch<ContactMessage>(`/api/contact/${id}`)
+
+if (error.value) {
+    showAlert('ไม่พบข้อความ', 'error')
+    router.push('/admin/messages')
+}
 
 const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this message?')) return
+    if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อความนี้?')) return
 
     try {
         await $fetch(`/api/contact/${id}`, { method: 'DELETE' })
-        showAlert('Message deleted', 'success')
+        showAlert('ลบข้อความเรียบร้อยแล้ว', 'success')
         router.push('/admin/messages')
     } catch (e) {
-        showAlert('Failed to delete message', 'error')
+        showAlert('เกิดข้อผิดพลาดในการลบข้อความ', 'error')
     }
 }
 </script>

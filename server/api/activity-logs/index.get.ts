@@ -4,13 +4,16 @@ export default defineEventHandler(async (event) => {
   try {
     const logs = await ActivityLog.find()
       .sort({ createdAt: -1 })
-      .limit(20)
+      .limit(10)
       .lean()
 
     return {
-      data: logs
+      data: logs,
     }
-  } catch (error) {
-    return { data: [] }
+  } catch (error: any) {
+    throw createError({
+      statusCode: 500,
+      message: 'Failed to fetch activity logs',
+    })
   }
 })

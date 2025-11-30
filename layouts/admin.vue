@@ -57,8 +57,10 @@
                     <!-- User Profile -->
                     <NuxtLink to="/admin/profile" class="flex items-center gap-4 hover:opacity-80 transition-opacity">
                         <div class="hidden sm:flex flex-col items-end">
-                            <span class="text-sm font-bold text-slate-800 dark:text-slate-100">Administrator</span>
-                            <span class="text-[10px] text-slate-500 dark:text-slate-400">System Admin</span>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ user?.name ||
+                                'Administrator' }}</span>
+                            <span class="text-[10px] text-slate-500 dark:text-slate-400 capitalize">{{ user?.role ||
+                                'System Admin' }}</span>
                         </div>
                         <div
                             class="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white dark:ring-slate-700">
@@ -107,11 +109,12 @@ const currentPageTitle = computed(() => {
     return path?.replace(/-/g, ' ') || 'Page'
 })
 
+const { user, logout } = useAuth()
+
 const handleLogout = async () => {
     try {
-        await $fetch('/api/auth/logout', { method: 'POST' })
+        await logout()
         showAlert('ออกจากระบบสำเร็จ', 'success')
-        router.push('/admin/login')
     } catch (e) {
         console.error('Logout failed', e)
         showAlert('เกิดข้อผิดพลาดในการออกจากระบบ', 'error')

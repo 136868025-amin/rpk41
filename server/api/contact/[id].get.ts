@@ -18,9 +18,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    return {
-      data: message,
-    }
+    return message
   } catch (error: any) {
     throw createError({
       statusCode: 500,

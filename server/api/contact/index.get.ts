@@ -1,13 +1,26 @@
 import { ContactMessage } from '~/server/models/contactMessage.schema'
 
 export default defineEventHandler(async (event) => {
+  const query = getQuery(event)
+  const page = Number(query.page) || 1
+  const limit = Number(query.limit) || 10
+  const skip = (page - 1) * limit
+
   try {
-    const messages = await ContactMessage.find()
-      .sort({ createdAt: -1 })
-      .lean()
+    const [messages, total] = await Promise.all([
+      ContactMessage.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      ContactMessage.countDocuments()
+    ])
 
     return {
-      data: messages,
+      messages,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit)
     }
   } catch (error: any) {
     throw createError({

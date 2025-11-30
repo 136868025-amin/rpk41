@@ -240,10 +240,10 @@ definePageMeta({
   }
 })
 
-// Mock Data for Charts
-const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const visitorData = [150, 230, 180, 320, 290, 140, 190]
-const maxVisitor = Math.max(...visitorData)
+// Mock Data for Charts (Initial)
+const days = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
+const visitorData = ref([0, 0, 0, 0, 0, 0, 0])
+const maxVisitor = computed(() => Math.max(...visitorData.value, 10)) // Ensure at least 10 for scale
 
 const stats = ref({
   totalNews: 0,
@@ -260,13 +260,14 @@ const loadingLogs = ref(true)
 const fetchDashboardData = async () => {
   try {
     // Fetch real stats from APIs
-    const [news, gallery, personnel, documents, events, activityLogs] = await Promise.all([
+    const [news, gallery, personnel, documents, events, activityLogs, visitorStats] = await Promise.all([
       $fetch('/api/news'),
       $fetch('/api/gallery'),
       $fetch('/api/personnel'),
       $fetch('/api/documents'),
       $fetch('/api/calendar'),
-      $fetch('/api/activity-logs')
+      $fetch('/api/activity-logs'),
+      $fetch('/api/visitors/stats')
     ])
 
     stats.value = {
@@ -285,6 +286,11 @@ const fetchDashboardData = async () => {
 
     // Process logs
     logs.value = (activityLogs as any).data || []
+
+    // Process Visitor Stats
+    const vStats = (visitorStats as any).data || []
+    days.value = vStats.map((s: any) => s.day)
+    visitorData.value = vStats.map((s: any) => s.count)
 
   } catch (e) {
     console.error('Failed to fetch dashboard data', e)

@@ -1,9 +1,18 @@
-import { defineMongooseModel } from '#nuxt/mongoose'
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-export const ContactMessage = defineMongooseModel({
-  name: 'ContactMessage',
-  schema: {
+export interface IContactMessage {
+  _id?: string
+  name: string
+  email: string
+  subject: string
+  message: string
+  isRead: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+const contactMessageSchema = new Schema<IContactMessage>(
+  {
     name: {
       type: String,
       required: true,
@@ -29,7 +38,9 @@ export const ContactMessage = defineMongooseModel({
       default: false,
     },
   },
-  options: {
+  {
     timestamps: true,
-  },
-})
+  }
+)
+
+export const ContactMessage = model<IContactMessage>('ContactMessage', contactMessageSchema)

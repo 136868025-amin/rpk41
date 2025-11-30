@@ -86,6 +86,13 @@
                 ตั้งค่าระบบ
             </div>
 
+            <NuxtLink to="/admin/users"
+                class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50 hover:text-white transition-all group"
+                active-class="bg-blue-600/10 text-blue-400 font-medium border border-blue-600/20 shadow-sm shadow-blue-900/20">
+                <span class="text-xl group-hover:scale-110 transition-transform duration-200">🛡️</span>
+                <span class="text-sm">ผู้ดูแลระบบ (Users)</span>
+            </NuxtLink>
+
             <NuxtLink to="/admin/settings"
                 class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50 hover:text-white transition-all group"
                 active-class="bg-blue-600/10 text-blue-400 font-medium border border-blue-600/20 shadow-sm shadow-blue-900/20">

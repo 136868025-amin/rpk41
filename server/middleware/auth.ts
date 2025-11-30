@@ -1,12 +1,8 @@
+import { verifyToken } from '~/server/utils/jwt'
+
 export default defineEventHandler(async (event) => {
   // Only protect /api routes
   if (!event.path.startsWith('/api')) {
-    return
-  }
-
-  // Allow public access to GET requests (viewing content)
-  // EXCEPT for /api/auth/me which needs session check (handled internally)
-  if (event.method === 'GET') {
     return
   }
 
@@ -15,12 +11,29 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // Check for valid session
-  const session = await useSession(event, {
-    password: process.env.NUXT_SESSION_PASSWORD || 'default-password-must-be-32-chars-long',
-  })
+  console.log('Auth Middleware:', event.method, event.path)
 
-  if (session.data.role !== 'admin') {
+  let token = getCookie(event, 'auth_token')
+
+  // Fallback: Check Authorization header
+  if (!token) {
+    const authHeader = getRequestHeader(event, 'authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7)
+    }
+  }
+
+  if (!token) {
+    throw createError({
+      statusCode: 401,
+      message: 'Unauthorized: No token provided',
+    })
+  }
+
+  const decoded: any = verifyToken(token)
+
+  if (!decoded || decoded.role !== 'admin') {
+    console.log('Auth Failed:', decoded)
     throw createError({
       statusCode: 401,
       message: 'Unauthorized: Admin access required',

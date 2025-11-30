@@ -2,22 +2,34 @@ import { Schema, model } from 'mongoose'
 
 export interface IActivityLog {
   action: 'create' | 'update' | 'delete' | 'login' | 'other'
-  module: 'news' | 'gallery' | 'documents' | 'personnel' | 'calendar' | 'settings' | 'auth'
+  module: string
   description: string
-  user?: string // Username or User ID
-  ipAddress?: string
+  user?: string // Username or ID
   createdAt: Date
 }
 
 const activityLogSchema = new Schema<IActivityLog>(
   {
-    action: { type: String, required: true },
-    module: { type: String, required: true },
-    description: { type: String, required: true },
-    user: { type: String, default: 'Admin' },
-    ipAddress: String,
+    action: {
+      type: String,
+      enum: ['create', 'update', 'delete', 'login', 'other'],
+      required: true,
+    },
+    module: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    user: {
+      type: String,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: { createdAt: true, updatedAt: false }, // Only createdAt needed
+  }
 )
 
 export const ActivityLog = model<IActivityLog>('ActivityLog', activityLogSchema)
