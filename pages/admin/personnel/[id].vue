@@ -3,7 +3,9 @@
         <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-2xl font-bold text-slate-800">
-                    {{ isEditing ? 'Edit Personnel' : 'Add Personnel' }}
+                    <span v-if="!isEditing">Add Personnel</span>
+                    <span v-else-if="loading">Edit Personnel</span>
+                    <span v-else>Edit Personnel: {{ form.name }}</span>
                 </h1>
                 <NuxtLink to="/admin/personnel" class="text-slate-500 hover:text-slate-700">
                     Cancel

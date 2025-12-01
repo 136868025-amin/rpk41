@@ -10,12 +10,12 @@
             </template>
 
             <!-- Custom Cell Renderers -->
-            <template #imageUrl="{ item }">
-                <img :src="item.imageUrl || 'https://via.placeholder.com/300x100'"
+            <template #cell-imageUrl="{ item }">
+                <img :src="item.imageUrl || 'https://via.placeholder.com/300x100'" :alt="item.title"
                     class="h-12 w-24 object-cover rounded border border-slate-200" />
             </template>
 
-            <template #isActive="{ item }">
+            <template #cell-isActive="{ item }">
                 <span class="px-2 py-1 rounded-full text-xs font-semibold"
                     :class="item.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                     {{ item.isActive ? 'Active' : 'Inactive' }}

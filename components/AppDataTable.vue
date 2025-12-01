@@ -17,8 +17,52 @@
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto flex-1">
+    <!-- Mobile Card View -->
+    <div class="md:hidden space-y-3 p-4 flex-1 overflow-y-auto">
+      <!-- Loading State -->
+      <template v-if="loading">
+        <div v-for="i in 5" :key="i" class="animate-pulse bg-slate-50 rounded-lg p-4 space-y-3">
+          <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+          <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+          <div class="h-4 bg-slate-200 rounded w-2/3"></div>
+        </div>
+      </template>
+
+      <!-- Empty State -->
+      <div v-else-if="paginatedData.length === 0"
+        class="flex flex-col items-center justify-center text-slate-400 py-12">
+        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+          <svg class="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <p class="text-sm font-medium text-slate-500">No data found</p>
+        <p class="text-xs text-slate-400 mt-1">Try adjusting your search or filters</p>
+      </div>
+
+      <!-- Card Items -->
+      <div v-else v-for="(item, index) in paginatedData" :key="index"
+        class="bg-white border border-slate-200 rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
+        <!-- Render each column as a row in the card -->
+        <div v-for="col in columns" :key="col.key" class="flex justify-between items-start gap-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase shrink-0">{{ col.label }}:</span>
+          <span class="text-sm text-slate-800 text-right flex-1">
+            <slot :name="`cell-${col.key}`" :item="item" :value="item[col.key]">
+              {{ item[col.key] }}
+            </slot>
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div v-if="$slots.rowActions" class="pt-3 border-t border-slate-100 flex justify-end">
+          <slot name="rowActions" :item="item" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Table View -->
+    <div class="hidden md:block overflow-x-auto flex-1">
       <table class="w-full text-left border-collapse">
         <thead
           class="bg-slate-50/50 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-100">
@@ -94,14 +138,14 @@
     <!-- Pagination -->
     <div
       class="p-4 border-t border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-      <div>
+      <div class="text-center sm:text-left">
         Showing <span class="font-medium text-slate-700">{{ startIndex + 1 }}</span> to <span
           class="font-medium text-slate-700">{{ Math.min(endIndex, filteredData.length) }}</span> of <span
           class="font-medium text-slate-700">{{ filteredData.length }}</span> entries
       </div>
       <div class="flex gap-2">
         <button @click="currentPage--" :disabled="currentPage === 1"
-          class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm">
+          class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm text-xs sm:text-sm">
           Previous
         </button>
         <div class="flex gap-1">
@@ -112,7 +156,7 @@
           </button>
         </div>
         <button @click="currentPage++" :disabled="currentPage === totalPages"
-          class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm">
+          class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm text-xs sm:text-sm">
           Next
         </button>
       </div>

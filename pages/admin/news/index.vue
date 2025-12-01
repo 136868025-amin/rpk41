@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout name="admin">
-        <div class="p-8">
+        <div class="p-4 md:p-8">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 <h1 class="text-2xl font-bold text-slate-800">News & Activities</h1>
                 <div class="flex gap-2">
@@ -16,22 +16,22 @@
             </div>
 
             <!-- Search and Filter Bar -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4">
-                <div class="flex-1 relative">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 space-y-3">
+                <div class="relative">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
                     <input v-model="searchQuery" type="text" placeholder="Search news..."
                         class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
                 </div>
-                <div class="flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-3">
                     <select v-model="selectedCategory"
-                        class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                        class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
                         <option value="">All Categories</option>
                         <option value="general">General</option>
                         <option value="academic">Academic</option>
                         <option value="activity">Activity</option>
                     </select>
                     <select v-model="selectedStatus"
-                        class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                        class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
                         <option value="">All Status</option>
                         <option value="published">Published</option>
                         <option value="draft">Draft</option>
@@ -41,32 +41,122 @@
 
             <!-- Bulk Actions Bar -->
             <div v-if="selectedItems.length > 0"
-                class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 flex items-center justify-between">
+                class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <span class="text-sm font-medium text-blue-900">
                     {{ selectedItems.length }} item(s) selected
                 </span>
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
                     <button @click="bulkPublish"
-                        class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors">
+                        class="flex-1 sm:flex-none px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors">
                         📢 Publish
                     </button>
                     <button @click="bulkUnpublish"
-                        class="px-3 py-1.5 bg-yellow-600 hover:bg-yellow-700 text-white text-sm rounded-lg transition-colors">
+                        class="flex-1 sm:flex-none px-3 py-1.5 bg-yellow-600 hover:bg-yellow-700 text-white text-sm rounded-lg transition-colors">
                         📝 Unpublish
                     </button>
                     <button @click="bulkDelete"
-                        class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors">
+                        class="flex-1 sm:flex-none px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors">
                         🗑️ Delete
                     </button>
                     <button @click="selectedItems = []"
-                        class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm rounded-lg transition-colors">
+                        class="flex-1 sm:flex-none px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm rounded-lg transition-colors">
                         Clear
                     </button>
                 </div>
             </div>
 
-            <!-- Table -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <!-- Mobile Card View (< md) -->
+            <div class="md:hidden space-y-4">
+                <!-- Loading State -->
+                <div v-if="loading" v-for="i in 5" :key="i" class="animate-pulse">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                        <div class="aspect-video bg-slate-100 rounded mb-3"></div>
+                        <div class="h-4 bg-slate-100 rounded mb-2"></div>
+                        <div class="h-4 bg-slate-100 rounded w-2/3"></div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div v-else-if="paginatedNews.length === 0"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center text-slate-500">
+                    <div class="text-5xl mb-4">📰</div>
+                    <p class="font-medium">No news found</p>
+                </div>
+
+                <!-- News Cards -->
+                <div v-else v-for="item in paginatedNews" :key="item._id"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all hover:shadow-md"
+                    :class="{ 'ring-2 ring-blue-500': selectedItems.includes(item.slug) }">
+
+                    <!-- Card Image -->
+                    <div class="relative aspect-video bg-slate-100">
+                        <img :src="item.coverImage || 'https://via.placeholder.com/400x200'" :alt="item.title"
+                            class="w-full h-full object-cover" />
+
+                        <!-- Checkbox -->
+                        <div class="absolute top-3 left-3">
+                            <input type="checkbox" :checked="selectedItems.includes(item.slug)"
+                                @change="toggleSelect(item.slug)"
+                                class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 bg-white" />
+                        </div>
+
+                        <!-- Category Badge -->
+                        <div class="absolute top-3 right-3">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold capitalize" :class="{
+                                'bg-blue-500 text-white': item.category === 'activity',
+                                'bg-purple-500 text-white': item.category === 'academic',
+                                'bg-slate-500 text-white': item.category === 'general'
+                            }">
+                                {{ item.category }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Card Content -->
+                    <div class="p-4">
+                        <!-- Title -->
+                        <h3 class="font-bold text-lg text-slate-800 mb-3 line-clamp-2">
+                            {{ item.title }}
+                        </h3>
+
+                        <!-- Status & Date -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold"
+                                :class="item.isPublished ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'">
+                                {{ item.isPublished ? '✓ Published' : '📝 Draft' }}
+                            </span>
+                            <span class="text-sm text-slate-500">
+                                {{ item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('th-TH', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                }) : 'No date' }}
+                            </span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2 pt-3 border-t border-slate-100">
+                            <button @click="handleEdit(item)"
+                                class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg transition-colors flex items-center justify-center gap-2 font-medium">
+                                <span class="text-lg">✏️</span>
+                                <span>Edit</span>
+                            </button>
+                            <button @click="handleDelete(item)"
+                                class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-lg transition-colors flex items-center justify-center gap-2 font-medium">
+                                <span class="text-lg">🗑️</span>
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Pagination -->
+                <AppPagination v-model:current-page="currentPage" :total-items="filteredNews.length"
+                    :items-per-page="itemsPerPage" />
+            </div>
+
+            <!-- Desktop Table View (≥ md) -->
+            <div class="hidden md:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <table class="w-full">
                     <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
@@ -102,7 +192,7 @@
                                     class="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500" />
                             </td>
                             <td class="px-4 py-3">
-                                <img :src="item.coverImage || 'https://via.placeholder.com/150'"
+                                <img :src="item.coverImage || 'https://via.placeholder.com/150'" :alt="item.title"
                                     class="h-12 w-20 object-cover rounded border border-slate-200" />
                             </td>
                             <td class="px-4 py-3 text-sm text-slate-800 font-medium">{{ item.title }}</td>
@@ -126,10 +216,14 @@
                             </td>
                             <td class="px-4 py-3 text-right">
                                 <div class="flex justify-end gap-2">
-                                    <button @click="handleEdit(item)" class="text-blue-600 hover:text-blue-800">
+                                    <button @click="handleEdit(item)"
+                                        class="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
+                                        title="Edit">
                                         ✏️
                                     </button>
-                                    <button @click="handleDelete(item)" class="text-red-600 hover:text-red-800">
+                                    <button @click="handleDelete(item)"
+                                        class="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors"
+                                        title="Delete">
                                         🗑️
                                     </button>
                                 </div>
@@ -138,7 +232,7 @@
                     </tbody>
                 </table>
 
-                <!-- Pagination -->
+                <!-- Desktop Pagination -->
                 <AppPagination v-model:current-page="currentPage" :total-items="filteredNews.length"
                     :items-per-page="itemsPerPage" />
             </div>

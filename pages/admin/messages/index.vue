@@ -1,114 +1,145 @@
 <template>
     <NuxtLayout name="admin">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">
-                <i class="fas fa-inbox mr-2"></i> ข้อความจากทางบ้าน
-            </h1>
-        </div>
+        <div class="p-4 md:p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-slate-800">
+                    📨 ข้อความจากทางบ้าน
+                </h1>
+            </div>
 
-        <div class="bg-white rounded-lg shadow overflow-hidden">
             <!-- Loading State -->
-            <div v-if="pending" class="p-8 text-center text-gray-500">
-                <i class="fas fa-circle-notch fa-spin fa-2x mb-2"></i>
-                <p>กำลังโหลดข้อมูล...</p>
+            <div v-if="pending" class="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+                <div class="text-4xl mb-4 animate-pulse">⏳</div>
+                <p class="text-slate-500">กำลังโหลดข้อมูล...</p>
             </div>
 
             <!-- Error State -->
-            <div v-else-if="error" class="p-8 text-center text-red-500">
-                <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
-                <p>เกิดข้อผิดพลาด: {{ error.message }}</p>
+            <div v-else-if="error" class="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+                <div class="text-5xl mb-4">⚠️</div>
+                <p class="text-red-600 font-medium">เกิดข้อผิดพลาด</p>
+                <p class="text-slate-500 text-sm mt-1">{{ error.message }}</p>
             </div>
 
             <!-- Empty State -->
-            <div v-else-if="!data?.messages?.length" class="p-8 text-center text-gray-500">
-                <i class="fas fa-inbox fa-3x mb-4 text-gray-300"></i>
-                <p>ไม่มีข้อความใหม่</p>
+            <div v-else-if="!data?.messages?.length"
+                class="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+                <div class="text-5xl mb-4">📭</div>
+                <p class="text-slate-500 font-medium">ไม่มีข้อความใหม่</p>
             </div>
 
-            <!-- Data Table -->
+            <!-- Messages Content -->
             <div v-else>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                <!-- Mobile Card View -->
+                <div class="md:hidden space-y-3">
+                    <div v-for="message in data.messages" :key="message._id"
+                        class="bg-white rounded-xl shadow-sm border border-slate-200 p-4"
+                        :class="{ 'ring-2 ring-blue-500 bg-blue-50': !message.isRead }">
+
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold"
+                                :class="!message.isRead ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'">
+                                {{ !message.isRead ? '🆕 ใหม่' : '✓ อ่านแล้ว' }}
+                            </span>
+                        </div>
+
+                        <div class="space-y-2 mb-3">
+                            <div>
+                                <span class="text-xs font-semibold text-slate-500 uppercase">ผู้ส่ง:</span>
+                                <p class="text-sm font-medium text-slate-900">{{ message.name }}</p>
+                                <p class="text-xs text-slate-600">{{ message.email }}</p>
+                            </div>
+
+                            <div>
+                                <span class="text-xs font-semibold text-slate-500 uppercase">หัวข้อ:</span>
+                                <p class="text-sm text-slate-800">{{ message.subject }}</p>
+                            </div>
+
+                            <div>
+                                <span class="text-xs font-semibold text-slate-500 uppercase">วันที่:</span>
+                                <p class="text-xs text-slate-600">{{ formatDate(message.createdAt) }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 pt-3 border-t border-slate-100">
+                            <NuxtLink :to="`/admin/messages/${message._id}`"
+                                class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 font-medium text-sm">
+                                <span>👁️</span>
+                                <span>อ่าน</span>
+                            </NuxtLink>
+                            <button @click="confirmDelete(message._id)"
+                                class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 font-medium text-sm">
+                                <span>🗑️</span>
+                                <span>ลบ</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Table View -->
+                <div class="hidden md:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    สถานะ</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ผู้ส่ง</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    หัวข้อ</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    วันที่</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    จัดการ</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">สถานะ</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">ผู้ส่ง</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">หัวข้อ</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">วันที่</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-slate-600 uppercase">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="divide-y divide-slate-100">
                             <tr v-for="message in data.messages" :key="message._id"
-                                :class="{ 'bg-blue-50': !message.isRead }" class="hover:bg-gray-50 transition-colors">
+                                :class="{ 'bg-blue-50': !message.isRead }" class="hover:bg-slate-50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span v-if="!message.isRead"
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        ใหม่
-                                    </span>
-                                    <span v-else
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                        อ่านแล้ว
+                                    <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                                        :class="!message.isRead ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-800'">
+                                        {{ !message.isRead ? 'ใหม่' : 'อ่านแล้ว' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ message.name }}</div>
-                                    <div class="text-sm text-gray-500">{{ message.email }}</div>
+                                    <div class="text-sm font-medium text-slate-900">{{ message.name }}</div>
+                                    <div class="text-sm text-slate-500">{{ message.email }}</div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-900 truncate max-w-xs">{{ message.subject }}</div>
+                                    <div class="text-sm text-slate-900 truncate max-w-xs">{{ message.subject }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                                     {{ formatDate(message.createdAt) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <NuxtLink :to="`/admin/messages/${message._id}`"
-                                        class="text-indigo-600 hover:text-indigo-900 mr-4">
-                                        <i class="fas fa-eye"></i> อ่าน
-                                    </NuxtLink>
-                                    <button @click="confirmDelete(message._id)" class="text-red-600 hover:text-red-900">
-                                        <i class="fas fa-trash"></i> ลบ
-                                    </button>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <NuxtLink :to="`/admin/messages/${message._id}`"
+                                            class="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
+                                            title="อ่าน">
+                                            👁️
+                                        </NuxtLink>
+                                        <button @click="confirmDelete(message._id)"
+                                            class="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors"
+                                            title="ลบ">
+                                            🗑️
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
 
-                <!-- Pagination -->
-                <div class="bg-white px-4 py-3 border-t border-gray-200 flex items-center justify-between sm:px-6">
-                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                        <div>
-                            <p class="text-sm text-gray-700">
-                                แสดงหน้า <span class="font-medium">{{ page }}</span> จาก <span class="font-medium">{{
-                                    data.totalPages }}</span>
-                            </p>
+                    <!-- Pagination -->
+                    <div
+                        class="bg-slate-50 px-4 py-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="text-sm text-slate-700">
+                            แสดงหน้า <span class="font-medium">{{ page }}</span> จาก <span class="font-medium">{{
+                                data.totalPages }}</span>
                         </div>
-                        <div>
-                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                aria-label="Pagination">
-                                <button @click="page > 1 ? page-- : null" :disabled="page === 1"
-                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
-                                    <span class="sr-only">Previous</span>
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button @click="page < data.totalPages ? page++ : null"
-                                    :disabled="page === data.totalPages"
-                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
-                                    <span class="sr-only">Next</span>
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
-                            </nav>
+                        <div class="flex gap-2">
+                            <button @click="page > 1 ? page-- : null" :disabled="page === 1"
+                                class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm text-sm">
+                                ← Previous
+                            </button>
+                            <button @click="page < data.totalPages ? page++ : null" :disabled="page === data.totalPages"
+                                class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm text-sm">
+                                Next →
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -122,6 +153,7 @@ definePageMeta({
     middleware: 'auth'
 })
 
+const { showAlert } = useAlert()
 const page = ref(1)
 const { data, pending, error, refresh } = await useFetch(() => `/api/contact?page=${page.value}&limit=10`)
 
@@ -140,10 +172,10 @@ const confirmDelete = async (id: string) => {
 
     try {
         await $fetch(`/api/contact/${id}`, { method: 'DELETE' })
+        showAlert('ลบข้อความเรียบร้อยแล้ว', 'success')
         refresh()
-        alert('ลบข้อความเรียบร้อยแล้ว')
     } catch (e) {
-        alert('เกิดข้อผิดพลาดในการลบข้อความ')
+        showAlert('เกิดข้อผิดพลาดในการลบข้อความ', 'error')
     }
 }
 </script>

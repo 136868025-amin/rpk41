@@ -2,7 +2,10 @@
     <NuxtLayout name="admin">
         <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8">
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-2xl font-bold text-slate-800">Edit Album</h1>
+                <h1 class="text-2xl font-bold text-slate-800">
+                    <span v-if="loading">Edit Album</span>
+                    <span v-else>Edit Album: {{ form.title }}</span>
+                </h1>
                 <NuxtLink to="/admin/gallery" class="text-slate-500 hover:text-slate-700">
                     Cancel
                 </NuxtLink>

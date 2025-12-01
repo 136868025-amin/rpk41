@@ -10,7 +10,7 @@
                 class="text-slate-500 hover:text-slate-700 transition-colors capitalize">
                 {{ crumb.label }}
             </NuxtLink>
-            <span v-else class="text-slate-800 font-medium capitalize">
+            <span v-else class="text-slate-800 font-medium">
                 {{ crumb.label }}
             </span>
         </template>
@@ -37,11 +37,23 @@ const breadcrumbs = computed(() => {
             'personnel': 'Personnel',
             'settings': 'Settings',
             'banners': 'Banners',
+            'messages': 'Messages',
+            'users': 'Users',
             'create': 'Create New',
             'edit': 'Edit'
         }
 
-        const label = labelMap[segment] || segment.replace(/-/g, ' ')
+        // Check if it's an ID (MongoDB ObjectId pattern or slug-like)
+        const isId = segment.match(/^[a-f0-9]{24}$/i) || segment.length > 20
+
+        let label = labelMap[segment] || segment.replace(/-/g, ' ')
+
+        // For IDs, show a placeholder or fetch from page title
+        if (isId && index === segments.length - 1) {
+            // Last segment is an ID - we'll try to show the actual title
+            // This will be displayed from the page's own title
+            label = '...' // Placeholder, will be replaced by page title
+        }
 
         // Build path for clickable breadcrumbs (all except last)
         const isLast = index === segments.length - 1
