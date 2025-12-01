@@ -98,10 +98,13 @@
 import AppImageUploader from '~/components/AppImageUploader.vue'
 import AppRichEditor from '~/components/AppRichEditor.vue'
 import AppMultiImageUploader from '~/components/AppMultiImageUploader.vue'
+import { useBreadcrumbStore } from '~/stores/breadcrumb'
 
 definePageMeta({
     middleware: 'auth'
 })
+
+const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -127,6 +130,8 @@ onMounted(async () => {
         try {
             const res: any = await $fetch(`/api/personnel/${id}`)
             form.value = res.data
+            // Set breadcrumb title
+            breadcrumbStore.setTitle(res.data.name)
         } catch (e) {
             alert('Personnel not found')
             router.push('/admin/personnel')

@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['nuxt-mongoose', '@nuxtjs/google-fonts'],
+  modules: ['nuxt-mongoose', '@nuxtjs/google-fonts', '@pinia/nuxt'],
   
   googleFonts: {
     families: {

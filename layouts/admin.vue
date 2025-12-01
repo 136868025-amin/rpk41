@@ -41,7 +41,7 @@
                             <span>Admin</span>
                             <span>/</span>
                             <span class="text-blue-600 dark:text-blue-400 font-medium capitalize">{{ currentPageTitle
-                            }}</span>
+                                }}</span>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,9 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import AdminSidebar from '~/components/admin/AdminSidebar.vue'
+import { useBreadcrumbStore } from '~/stores/breadcrumb'
 
 const route = useRoute()
 const router = useRouter()
@@ -90,6 +92,9 @@ const { showAlert } = useAlert()
 const { isDark, toggleDarkMode } = useDarkMode()
 
 const isSidebarOpen = ref(false)
+
+const breadcrumbStore = useBreadcrumbStore()
+const { currentTitle } = storeToRefs(breadcrumbStore)
 
 // Apply dark mode class to HTML element
 useHead({
@@ -104,9 +109,32 @@ watch(() => route.path, () => {
 })
 
 const currentPageTitle = computed(() => {
-    const path = route.path.split('/').pop()
-    if (path === 'admin') return 'Dashboard'
-    return path?.replace(/-/g, ' ') || 'Page'
+    const pathSegments = route.path.split('/').filter(Boolean)
+    const lastSegment = pathSegments[pathSegments.length - 1]
+
+    // Check if last segment is MongoDB ID
+    const isId = lastSegment?.match(/^[a-f0-9]{24}$/i)
+
+    if (isId && currentTitle.value) {
+        return currentTitle.value
+    }
+
+    // Map common routes to better names
+    const titleMap: Record<string, string> = {
+        'admin': 'Dashboard',
+        'news': 'News',
+        'gallery': 'Gallery',
+        'documents': 'Documents',
+        'calendar': 'Calendar',
+        'personnel': 'Personnel',
+        'settings': 'Settings',
+        'banners': 'Banners',
+        'messages': 'Messages',
+        'users': 'Users',
+        'create': 'Create New'
+    }
+
+    return titleMap[lastSegment || ''] || lastSegment?.replace(/-/g, ' ') || 'Page'
 })
 
 const { user, logout } = useAuth()

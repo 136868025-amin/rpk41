@@ -17,6 +17,7 @@
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/seo": "^3.2.2",
+    "@pinia/nuxt": "^0.11.3",
     "@tiptap/extension-blockquote": "^3.11.1",
     "@tiptap/extension-character-count": "^3.11.1",
     "@tiptap/extension-code-block": "^3.11.1",
@@ -44,6 +45,7 @@
     "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.20.1",
     "nuxt-mongoose": "^1.0.6",
+    "pinia": "^3.0.4",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3"
   },

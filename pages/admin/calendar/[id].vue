@@ -81,9 +81,13 @@
 </template>
 
 <script setup lang="ts">
+import { useBreadcrumbStore } from '~/stores/breadcrumb'
+
 definePageMeta({
     middleware: 'auth'
 })
+
+const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -109,6 +113,8 @@ onMounted(async () => {
             startDate: data.startDate ? new Date(data.startDate).toISOString().split('T')[0] : '',
             endDate: data.endDate ? new Date(data.endDate).toISOString().split('T')[0] : ''
         }
+        // Set breadcrumb title
+        breadcrumbStore.setTitle(data.title)
     } catch (e) {
         alert('Event not found')
         router.push('/admin/calendar')

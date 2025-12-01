@@ -105,10 +105,13 @@
 <script setup lang="ts">
 import AppImageUploader from '~/components/AppImageUploader.vue'
 import AppMultiImageUploader from '~/components/AppMultiImageUploader.vue'
+import { useBreadcrumbStore } from '~/stores/breadcrumb'
 
 definePageMeta({
     middleware: 'auth'
 })
+
+const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -140,6 +143,8 @@ onMounted(async () => {
             ...data,
             eventDate: data.eventDate ? new Date(data.eventDate).toISOString().split('T')[0] : ''
         }
+        // Set breadcrumb title
+        breadcrumbStore.setTitle(data.title)
     } catch (e) {
         alert('Album not found')
         router.push('/admin/gallery')

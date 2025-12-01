@@ -53,10 +53,13 @@
 
 <script setup lang="ts">
 import FileUploader from '~/components/admin/FileUploader.vue'
+import { useBreadcrumbStore } from '~/stores/breadcrumb'
 
 definePageMeta({
     middleware: 'auth'
 })
+
+const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -76,6 +79,8 @@ onMounted(async () => {
     try {
         const res: any = await $fetch(`/api/documents/${id}`)
         form.value = res.data
+        // Set breadcrumb title
+        breadcrumbStore.setTitle(res.data.title)
     } catch (e) {
         alert('Document not found')
         router.push('/admin/documents')

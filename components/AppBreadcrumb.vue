@@ -18,7 +18,12 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useBreadcrumbStore } from '~/stores/breadcrumb'
+
 const route = useRoute()
+const breadcrumbStore = useBreadcrumbStore()
+const { currentTitle } = storeToRefs(breadcrumbStore)
 
 const breadcrumbs = computed(() => {
     const pathSegments = route.path.split('/').filter(Boolean)
@@ -43,16 +48,14 @@ const breadcrumbs = computed(() => {
             'edit': 'Edit'
         }
 
-        // Check if it's an ID (MongoDB ObjectId pattern or slug-like)
-        const isId = segment.match(/^[a-f0-9]{24}$/i) || segment.length > 20
+        // Check if it's an ID (MongoDB ObjectId pattern)
+        const isId = segment.match(/^[a-f0-9]{24}$/i)
 
         let label = labelMap[segment] || segment.replace(/-/g, ' ')
 
-        // For IDs, show a placeholder or fetch from page title
+        // For IDs, use the title from store if available
         if (isId && index === segments.length - 1) {
-            // Last segment is an ID - we'll try to show the actual title
-            // This will be displayed from the page's own title
-            label = '...' // Placeholder, will be replaced by page title
+            label = currentTitle.value || '...'
         }
 
         // Build path for clickable breadcrumbs (all except last)
@@ -63,5 +66,10 @@ const breadcrumbs = computed(() => {
     })
 
     return crumbs
+})
+
+// Clear breadcrumb title when navigating away
+onUnmounted(() => {
+    breadcrumbStore.clearTitle()
 })
 </script>
