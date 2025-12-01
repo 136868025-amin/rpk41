@@ -37,5 +37,10 @@ export default defineNuxtConfig({
       seedDb: process.env.SEED_DB || 'false',
     },
   },
+  vite: {
+    server: {
+      allowedHosts: true,
+    },
+  },
 })
 

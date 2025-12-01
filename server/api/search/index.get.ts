@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const q = query.q as string
 
   if (!q || q.length < 2) {
-    return { data: [] }
+    return []
   }
 
   try {
@@ -74,9 +74,7 @@ export default defineEventHandler(async (event) => {
       }))
     ]
 
-    return {
-      data: results
-    }
+    return results
   } catch (error: any) {
     throw createError({
       statusCode: 500,
