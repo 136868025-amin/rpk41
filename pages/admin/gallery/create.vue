@@ -1,130 +1,190 @@
 <template>
     <NuxtLayout name="admin">
-        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-2xl font-bold text-slate-800">Create Album</h1>
-                <NuxtLink to="/admin/gallery" class="text-slate-500 hover:text-slate-700">
-                    Cancel
-                </NuxtLink>
-            </div>
-
-            <form @submit.prevent="handleSubmit" class="space-y-6">
-                <!-- Title -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Album Title</label>
-                    <input v-model="form.title" type="text" required
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                </div>
-
-                <!-- Event Date -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Event Date</label>
-                    <input v-model="form.eventDate" type="date" required
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                </div>
-
-                <!-- Description -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Description</label>
-                    <textarea v-model="form.description" rows="3"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Category -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Category</label>
-                        <select v-model="form.category"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                            <option value="general">General (ทั่วไป)</option>
-                            <option value="activity">Activity (กิจกรรม)</option>
-                            <option value="academic">Academic (วิชาการ)</option>
-                            <option value="sport">Sport (กีฬา)</option>
-                        </select>
-                    </div>
-
-                    <!-- Highlight -->
-                    <div class="flex items-center h-full pt-6">
-                        <div class="flex items-center space-x-3">
-                            <input v-model="form.isHighlight" type="checkbox" id="isHighlight"
-                                class="h-5 w-5 text-amber-600 rounded focus:ring-amber-500" />
-                            <label for="isHighlight" class="font-medium text-slate-700">Pin to Highlight Slider</label>
+        <div class="p-4 md:p-8 max-w-5xl mx-auto">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl shadow-xl p-6 md:p-8 mb-8 text-white">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="p-4 bg-white/20 backdrop-blur-sm rounded-2xl">
+                            <span class="text-4xl">📸</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold">Create Album</h1>
+                            <p class="text-purple-100 mt-1">Create a beautiful photo gallery</p>
                         </div>
                     </div>
+                    <NuxtLink to="/admin/gallery"
+                        class="px-6 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl font-semibold transition-all text-center">
+                        Cancel
+                    </NuxtLink>
                 </div>
+            </div>
 
-                <!-- Cover Image -->
-                <AppImageUploader v-model="form.coverImage" label="Cover Image" />
+            <!-- Form Card -->
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8">
+                <form @submit.prevent="handleSubmit" class="space-y-8">
+                    <!-- Title & Event Date -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>🖼️</span>
+                                <span>Album Title</span>
+                            </label>
+                            <input v-model="form.title" type="text" required
+                                class="w-full px-4 py-3 text-lg font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all"
+                                placeholder="Enter album title..." />
+                        </div>
 
-                <!-- Gallery Images -->
-                <AppMultiImageUploader v-model="form.images" label="Gallery Photos" />
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>📅</span>
+                                <span>Event Date</span>
+                            </label>
+                            <input v-model="form.eventDate" type="date" required
+                                class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all" />
+                        </div>
+                    </div>
 
-                <!-- Status -->
-                <div class="flex items-center space-x-3 bg-slate-50 p-4 rounded-lg">
-                    <input v-model="form.isPublished" type="checkbox" id="isPublished"
-                        class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500" />
-                    <label for="isPublished" class="font-medium text-slate-700">Publish Album</label>
-                </div>
+                    <!-- Description -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                            <span>📝</span>
+                            <span>Description</span>
+                        </label>
+                        <textarea v-model="form.description" rows="4"
+                            class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all resize-none"
+                            placeholder="Describe the event or photos in this album..."></textarea>
+                    </div>
 
-                <!-- Submit Button -->
-                <div class="pt-4 border-t border-slate-100 flex justify-end">
-                    <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105"
-                        :disabled="submitting">
-                        {{ submitting ? 'Creating...' : 'Create Album' }}
-                    </button>
-                </div>
-            </form>
+                    <!-- Category & Highlight -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>🏷️</span>
+                                <span>Category</span>
+                            </label>
+                            <select v-model="form.category"
+                                class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all">
+                                <option value="general">📋 General (ทั่วไป)</option>
+                                <option value="activity">🎉 Activity (กิจกรรม)</option>
+                                <option value="academic">📚 Academic (วิชาการ)</option>
+                                <option value="sport">⚽ Sport (กีฬา)</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-end">
+                            <div
+                                class="w-full p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border-2 border-amber-200">
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input v-model="form.isHighlight" type="checkbox" id="isHighlight"
+                                        class="w-6 h-6 text-amber-600 rounded-lg focus:ring-2 focus:ring-amber-500 cursor-pointer" />
+                                    <div>
+                                        <span
+                                            class="font-bold text-slate-800 text-sm group-hover:text-amber-700 transition-colors">
+                                            ⭐ Pin to Highlight Slider
+                                        </span>
+                                        <p class="text-xs text-slate-600 mt-0.5">Show on homepage featured section</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cover Image -->
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-100">
+                        <AppImageUploader v-model="form.coverImage" label="Cover Image" />
+                    </div>
+
+                    <!-- Gallery Images -->
+                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-100">
+                        <AppMultiImageUploader v-model="form.images" label="Gallery Photos" />
+                        <p class="text-sm text-blue-700 mt-3 flex items-center gap-2">
+                            <span>💡</span>
+                            <span>Upload multiple photos to create a beautiful gallery</span>
+                        </p>
+                    </div>
+
+                    <!-- Publish Status -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200">
+                        <label class="flex items-center gap-4 cursor-pointer group">
+                            <input v-model="form.isPublished" type="checkbox" id="isPublished"
+                                class="w-6 h-6 text-green-600 rounded-lg focus:ring-2 focus:ring-green-500 cursor-pointer" />
+                            <div>
+                                <span
+                                    class="font-bold text-slate-800 text-lg group-hover:text-green-700 transition-colors">
+                                    Publish Album
+                                </span>
+                                <p class="text-sm text-slate-600 mt-0.5">Make this album visible on the website</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-6 border-t-2 border-slate-100 flex flex-col sm:flex-row gap-4 sm:justify-end">
+                        <NuxtLink to="/admin/gallery"
+                            class="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all text-center">
+                            Cancel
+                        </NuxtLink>
+                        <button type="submit"
+                            class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-70 disabled:transform-none flex items-center justify-center gap-3"
+                            :disabled="submitting">
+                            <span v-if="submitting" class="animate-spin text-2xl">⏳</span>
+                            <span v-else class="text-2xl">🚀</span>
+                            <span class="text-lg">{{ submitting ? "Creating..." : "Create Album" }}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import AppImageUploader from '~/components/AppImageUploader.vue'
-import AppMultiImageUploader from '~/components/AppMultiImageUploader.vue'
+import AppImageUploader from "~/components/AppImageUploader.vue";
+import AppMultiImageUploader from "~/components/AppMultiImageUploader.vue";
 
 definePageMeta({
-    middleware: 'auth'
-})
+    middleware: "auth",
+});
 
-const router = useRouter()
-const { showAlert, showLoading, closeAlert } = useAlert()
+const router = useRouter();
+const { showAlert, showLoading, closeAlert } = useAlert();
 
 const form = ref({
-    title: '',
-    description: '',
-    eventDate: new Date().toISOString().split('T')[0],
-    category: 'general',
+    title: "",
+    description: "",
+    eventDate: new Date().toISOString().split("T")[0],
+    category: "general",
     isHighlight: false,
-    coverImage: '',
+    coverImage: "",
     images: [] as string[],
-    isPublished: true
-})
+    isPublished: true,
+});
 
-const submitting = ref(false)
+const submitting = ref(false);
 
 const handleSubmit = async () => {
     if (form.value.images.length === 0) {
-        showAlert('Please upload at least one image', 'warning')
-        return
+        showAlert("Please upload at least one image 📸", "warning");
+        return;
     }
 
-    submitting.value = true
-    const loadingId = showLoading('Creating gallery album...')
+    submitting.value = true;
+    const loadingId = showLoading("Creating gallery album...");
 
     try {
-        await $fetch('/api/gallery', {
-            method: 'POST',
-            body: form.value
-        })
-        closeAlert(loadingId)
-        showAlert('Gallery album created successfully!', 'success')
-        router.push('/admin/gallery')
+        await $fetch("/api/gallery", {
+            method: "POST",
+            body: form.value,
+        });
+        closeAlert(loadingId);
+        showAlert("Gallery album created successfully! 🎉", "success");
+        router.push("/admin/gallery");
     } catch (e: any) {
-        closeAlert(loadingId)
-        showAlert(e.data?.message || 'Failed to create album', 'error')
+        closeAlert(loadingId);
+        showAlert(e.data?.message || "Failed to create album", "error");
     } finally {
-        submitting.value = false
+        submitting.value = false;
     }
-}
+};
 </script>

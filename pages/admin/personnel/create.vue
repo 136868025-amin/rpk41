@@ -1,129 +1,185 @@
 <template>
     <NuxtLayout name="admin">
-        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-2xl font-bold text-slate-800">Add Personnel</h1>
-                <NuxtLink to="/admin/personnel" class="text-slate-500 hover:text-slate-700">
-                    Cancel
-                </NuxtLink>
+        <div class="p-4 md:p-8 max-w-5xl mx-auto">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl shadow-xl p-6 md:p-8 mb-8 text-white">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="p-4 bg-white/20 backdrop-blur-sm rounded-2xl">
+                            <span class="text-4xl">👨‍🏫</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold">Add Personnel</h1>
+                            <p class="text-orange-100 mt-1">Add a new staff member to your school</p>
+                        </div>
+                    </div>
+                    <NuxtLink to="/admin/personnel"
+                        class="px-6 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl font-semibold transition-all text-center">
+                        Cancel
+                    </NuxtLink>
+                </div>
             </div>
 
-            <form @submit.prevent="handleSubmit" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Name -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
-                        <input v-model="form.name" type="text" required
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            <!-- Form Card -->
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8">
+                <form @submit.prevent="handleSubmit" class="space-y-8">
+                    <!-- Name & Position -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>👤</span>
+                                <span>Full Name</span>
+                            </label>
+                            <input v-model="form.name" type="text" required
+                                class="w-full px-4 py-3 text-lg font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all"
+                                placeholder="Enter full name..." />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>💼</span>
+                                <span>Position</span>
+                            </label>
+                            <input v-model="form.position" type="text" required
+                                class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all"
+                                placeholder="e.g. Principal, Teacher, etc." />
+                        </div>
                     </div>
 
-                    <!-- Position -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Position</label>
-                        <input v-model="form.position" type="text" required
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                    </div>
-                </div>
+                    <!-- Department & Order Index -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>🏢</span>
+                                <span>Department</span>
+                            </label>
+                            <select v-model="form.department"
+                                class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all">
+                                <option value="administrators">👔 Administrators (ผู้บริหาร)</option>
+                                <option value="teachers">📚 Teachers (ครูอาจารย์)</option>
+                                <option value="support_staff">🔧 Support Staff (บุคลากรสนับสนุน)</option>
+                            </select>
+                        </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Department -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Department</label>
-                        <select v-model="form.department"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                            <option value="administrators">Administrators (ผู้บริหาร)</option>
-                            <option value="teachers">Teachers (ครูอาจารย์)</option>
-                            <option value="support_staff">Support Staff (บุคลากรสนับสนุน)</option>
-                        </select>
-                    </div>
-
-                    <!-- Order Index -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Order Index (Sort Order)</label>
-                        <input v-model="form.orderIndex" type="number"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Email -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Email (Optional)</label>
-                        <input v-model="form.email" type="email"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>🔢</span>
+                                <span>Display Order</span>
+                            </label>
+                            <input v-model="form.orderIndex" type="number"
+                                class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all"
+                                placeholder="0" />
+                            <p class="text-xs text-slate-500 mt-2">Lower numbers appear first</p>
+                        </div>
                     </div>
 
-                    <!-- Phone -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Phone (Optional)</label>
-                        <input v-model="form.phone" type="text"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                    <!-- Email & Phone -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>✉️</span>
+                                <span>Email (Optional)</span>
+                            </label>
+                            <input v-model="form.email" type="email"
+                                class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all"
+                                placeholder="email@school.ac.th" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <span>📞</span>
+                                <span>Phone (Optional)</span>
+                            </label>
+                            <input v-model="form.phone" type="text"
+                                class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all"
+                                placeholder="02-123-4567" />
+                        </div>
                     </div>
-                </div>
 
-                <!-- Photo -->
-                <AppImageUploader v-model="form.photo" label="Profile Photo" />
+                    <!-- Profile Photo -->
+                    <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 border-2 border-orange-100">
+                        <AppImageUploader v-model="form.photo" label="Profile Photo" />
+                    </div>
 
-                <!-- Content (Rich Text) -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Biography / Portfolio</label>
-                    <AppRichEditor v-model="form.content" />
-                </div>
+                    <!-- Biography/Portfolio Content -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                            <span>📝</span>
+                            <span>Biography / Portfolio</span>
+                        </label>
+                        <div
+                            class="border-2 border-slate-200 rounded-2xl overflow-hidden hover:border-orange-300 transition-colors">
+                            <AppRichEditor v-model="form.content" />
+                        </div>
+                    </div>
 
-                <!-- Gallery -->
-                <AppMultiImageUploader v-model="form.gallery" label="Portfolio Gallery" />
+                    <!-- Portfolio Gallery -->
+                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-100">
+                        <AppMultiImageUploader v-model="form.gallery" label="Portfolio Gallery" />
+                        <p class="text-sm text-blue-700 mt-3 flex items-center gap-2">
+                            <span>💡</span>
+                            <span>Showcase achievements, certificates, or work samples</span>
+                        </p>
+                    </div>
 
-                <!-- Submit Button -->
-                <div class="pt-4 border-t border-slate-100 flex justify-end">
-                    <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105"
-                        :disabled="submitting">
-                        {{ submitting ? 'Saving...' : 'Add Personnel' }}
-                    </button>
-                </div>
-            </form>
+                    <!-- Submit Button -->
+                    <div class="pt-6 border-t-2 border-slate-100 flex flex-col sm:flex-row gap-4 sm:justify-end">
+                        <NuxtLink to="/admin/personnel"
+                            class="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all text-center">
+                            Cancel
+                        </NuxtLink>
+                        <button type="submit"
+                            class="px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-70 disabled:transform-none flex items-center justify-center gap-3"
+                            :disabled="submitting">
+                            <span v-if="submitting" class="animate-spin text-2xl">⏳</span>
+                            <span v-else class="text-2xl">🚀</span>
+                            <span class="text-lg">{{ submitting ? "Saving..." : "Add Personnel" }}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import AppImageUploader from '~/components/AppImageUploader.vue'
-import AppRichEditor from '~/components/AppRichEditor.vue'
-import AppMultiImageUploader from '~/components/AppMultiImageUploader.vue'
+import AppImageUploader from "~/components/AppImageUploader.vue";
+import AppRichEditor from "~/components/AppRichEditor.vue";
+import AppMultiImageUploader from "~/components/AppMultiImageUploader.vue";
 
 definePageMeta({
-    middleware: 'auth'
-})
+    middleware: "auth",
+});
 
-const router = useRouter()
-const { showAlert } = useAlert()
-const submitting = ref(false)
+const router = useRouter();
+const { showAlert } = useAlert();
+const submitting = ref(false);
 
 const form = ref<any>({
-    name: '',
-    position: '',
-    department: 'teachers',
-    photo: '',
+    name: "",
+    position: "",
+    department: "teachers",
+    photo: "",
     orderIndex: 0,
-    email: '',
-    phone: '',
-    content: '',
-    gallery: [] as string[]
-})
+    email: "",
+    phone: "",
+    content: "",
+    gallery: [] as string[],
+});
 
 const handleSubmit = async () => {
-    submitting.value = true
+    submitting.value = true;
     try {
-        await $fetch('/api/personnel', {
-            method: 'POST',
-            body: form.value
-        })
-        showAlert('Personnel added successfully', 'success')
-        router.push('/admin/personnel')
+        await $fetch("/api/personnel", {
+            method: "POST",
+            body: form.value,
+        });
+        showAlert("Personnel added successfully! 🎉", "success");
+        router.push("/admin/personnel");
     } catch (e: any) {
-        showAlert(e.data?.message || 'Failed to save', 'error')
+        showAlert(e.data?.message || "Failed to save", "error");
     } finally {
-        submitting.value = false
+        submitting.value = false;
     }
-}
+};
 </script>
