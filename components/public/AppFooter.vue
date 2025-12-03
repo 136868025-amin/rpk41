@@ -17,7 +17,6 @@
                             <div class="text-sm">{{ configStore.config?.location?.province ?
                                 `จังหวัด${configStore.config.location.province}` : 'จังหวัดยะลา' }}</div>
                         </div>
-                        </a>
                         <a v-if="configStore.config?.socialMedia?.youtube"
                             :href="configStore.config.socialMedia.youtube" target="_blank"
                             class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
