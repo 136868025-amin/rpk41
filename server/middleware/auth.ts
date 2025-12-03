@@ -11,6 +11,21 @@ export default defineEventHandler(async (event) => {
     return
   }
 
+  // Allow public GET requests for content
+  if (event.method === 'GET') {
+    const publicEndpoints = [
+      '/api/news',
+      '/api/banners',
+      '/api/gallery',
+      '/api/calendar',
+      '/api/config',
+      '/api/personnel',
+    ]
+    if (publicEndpoints.some(endpoint => event.path.startsWith(endpoint))) {
+      return
+    }
+  }
+
   console.log('Auth Middleware:', event.method, event.path)
 
   let token = getCookie(event, 'auth_token')
