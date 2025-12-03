@@ -17,21 +17,6 @@
                             <div class="text-sm">{{ configStore.config?.location?.province ?
                                 `จังหวัด${configStore.config.location.province}` : 'จังหวัดยะลา' }}</div>
                         </div>
-                    </div>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-4">
-                        {{ configStore.config?.slogan || 'โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา
-                        มุ่งมั่นพัฒนาคุณภาพการศึกษา เพื่อสร้างคนดี มีความรู้ และพร้อมสู่สังคมโลก' }}
-                    </p>
-                    <div class="flex gap-3">
-                        <a v-if="configStore.config?.socialMedia?.facebook"
-                            :href="configStore.config.socialMedia.facebook" target="_blank"
-                            class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
-                            <span class="text-xl">📘</span>
-                        </a>
-                        <a v-if="configStore.config?.socialMedia?.instagram"
-                            :href="configStore.config.socialMedia.instagram" target="_blank"
-                            class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
-                            <span class="text-xl">📷</span>
                         </a>
                         <a v-if="configStore.config?.socialMedia?.youtube"
                             :href="configStore.config.socialMedia.youtube" target="_blank"
