@@ -236,8 +236,8 @@ const calendarOptions = computed(() => ({
     eventTimeFormat: {
         hour: '2-digit',
         minute: '2-digit',
-        meridiem: false
-    }
+        hour12: false
+    } as const
 }))
 
 // Methods
