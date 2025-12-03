@@ -14,12 +14,15 @@ import { User } from '../models/user.schema'
 export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig()
   
-  // Only seed in development mode and if SEED_DB is true
-  if (config.public.seedDb !== 'true') {
+  // Check if seeding is needed
+  const configCount = await SchoolConfig.countDocuments()
+  const shouldSeed = config.public.seedDb === 'true' || configCount === 0
+
+  if (!shouldSeed) {
     return
   }
 
-  console.log('🌱 Starting database seeding...')
+  console.log('🌱 Starting database seeding (Reason: ' + (configCount === 0 ? 'Empty Database' : 'SEED_DB=true') + ')...')
 
   try {
     // Clear existing data (optional - comment out to preserve data)

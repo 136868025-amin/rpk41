@@ -1,5 +1,3 @@
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
 import { randomUUID } from 'crypto'
 import { verifyToken } from '~/server/utils/jwt'
 
@@ -57,16 +55,11 @@ export default defineEventHandler(async (event) => {
         continue // Skip too large files
       }
 
-      // Generate unique filename
-      const ext = file.filename?.split('.').pop() || 'png'
-      const filename = `${Date.now()}-${randomUUID()}.${ext}`
-      const filePath = join(process.cwd(), 'public', 'uploads', filename)
-
-      // Save file
-      await writeFile(filePath, file.data)
+      // Convert to Base64 (Vercel File System workaround)
+      const base64String = `data:${file.type};base64,${file.data.toString('base64')}`
 
       uploadedFiles.push({
-        url: `/uploads/${filename}`,
+        url: base64String, // Return Base64 string as URL
         originalName: file.filename,
       })
     }
