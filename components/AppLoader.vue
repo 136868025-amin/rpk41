@@ -8,7 +8,7 @@
                     <div class="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin">
                     </div>
                     <div class="absolute inset-0 flex items-center justify-center">
-                        <span class="text-xs font-bold text-primary-800">RPC</span>
+                        <span class="text-xs font-bold text-primary-800">RPK 41</span>
                     </div>
                 </div>
 
