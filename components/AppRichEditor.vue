@@ -298,9 +298,15 @@ import { TaskList } from '@tiptap/extension-task-list'
 import { TaskItem } from '@tiptap/extension-task-item'
 import { CharacterCount } from '@tiptap/extension-character-count'
 
-const props = defineProps<{
-    modelValue: string
-}>()
+// const props = defineProps<{
+//     modelValue: string
+// }>()
+
+const props = withDefaults(defineProps<{
+    modelValue?: string
+}>(), {
+    modelValue: ''
+})
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -310,7 +316,10 @@ const editor = useEditor({
         StarterKit.configure({
             heading: {
                 levels: [1, 2, 3]
-            }
+            },
+            // Disable link and underline since we're using custom extensions
+            link: false,
+            underline: false,
         }),
         Image,
         Link.configure({

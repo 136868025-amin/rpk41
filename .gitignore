@@ -8,10 +8,14 @@ dist
 
 # Node dependencies
 node_modules
+*.log*
+.nuxt
+.output
+server/uploads/
+*.log
 
 # Logs
 logs
-*.log
 
 # Misc
 .DS_Store
