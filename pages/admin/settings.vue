@@ -230,6 +230,7 @@
 <script setup lang="ts">
 import AppRichEditor from '~/components/AppRichEditor.vue'
 import AppImageUploader from '~/components/AppImageUploader.vue'
+import { useConfigStore } from '~/stores/config'
 
 definePageMeta({
     middleware: 'auth'
@@ -297,6 +298,11 @@ const handleSubmit = async () => {
             method: 'PUT',
             body: form.value
         })
+
+        // Refresh global config
+        const configStore = useConfigStore()
+        await configStore.fetchConfig()
+
         closeAlert(loadingId)
         showAlert('Configuration saved successfully! 🎉', 'success')
     } catch (e: any) {

@@ -4,12 +4,17 @@
         <div class="h-16 flex items-center px-6 bg-slate-950 border-b border-slate-800/50">
             <div class="flex items-center gap-3">
                 <div
-                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <span class="text-lg font-bold">A</span>
+                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 overflow-hidden">
+                    <img v-if="configStore.config?.logo" :src="configStore.config.logo"
+                        class="w-full h-full object-cover" />
+                    <span v-else class="text-lg font-bold">{{ configStore.config?.schoolNameEn?.charAt(0) || 'A'
+                    }}</span>
                 </div>
                 <div>
                     <h2 class="text-sm font-bold tracking-wide">Admin Panel</h2>
-                    <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Ratchaprachanukroh 41</p>
+                    <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider truncate max-w-[150px]">
+                        {{ configStore.config?.schoolNameEn || 'Ratchaprachanukroh 41' }}
+                    </p>
                 </div>
             </div>
             <!-- Close button for mobile -->
@@ -113,5 +118,15 @@
 </template>
 
 <script setup lang="ts">
+import { useConfigStore } from '~/stores/config'
+
 defineEmits(['logout', 'close'])
+
+const configStore = useConfigStore()
+
+onMounted(() => {
+    if (!configStore.config) {
+        configStore.fetchConfig()
+    }
+})
 </script>
