@@ -1,39 +1,32 @@
 <template>
   <div class="w-full">
     <label class="block text-sm font-medium text-slate-700 mb-2">{{ label }}</label>
-    
+
     <!-- Preview Area -->
-    <div v-if="modelValue" class="relative group mb-4 w-full h-64 bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
+    <div v-if="modelValue"
+      class="relative group mb-4 w-full h-64 bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
       <img :src="modelValue" class="w-full h-full object-cover" />
-      <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-        <button @click.prevent="$emit('update:modelValue', '')" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition-colors">
+      <div
+        class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+        <button @click.prevent="$emit('update:modelValue', '')"
+          class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition-colors">
           Remove Image
         </button>
       </div>
     </div>
 
     <!-- Upload Area -->
-    <div
-      v-else
+    <div v-else
       class="relative border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer"
-      @dragover.prevent="isDragging = true"
-      @dragleave.prevent="isDragging = false"
-      @drop.prevent="handleDrop"
-      @click="triggerFileInput"
-    >
-      <input
-        ref="fileInput"
-        type="file"
-        accept="image/*"
-        class="hidden"
-        @change="handleFileSelect"
-      />
-      
+      @dragover.prevent="isDragging = true" @dragleave.prevent="isDragging = false" @drop.prevent="handleDrop"
+      @click="triggerFileInput">
+      <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileSelect" />
+
       <div v-if="uploading" class="flex flex-col items-center">
         <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-2"></div>
         <p class="text-sm text-slate-500">Uploading...</p>
       </div>
-      
+
       <div v-else class="flex flex-col items-center">
         <span class="text-4xl mb-2">☁️</span>
         <p class="text-sm font-medium text-slate-700">Click to upload or drag and drop</p>
@@ -84,11 +77,14 @@ const uploadFile = async (file: File) => {
 
   uploading.value = true
   error.value = ''
-  
-  const formData = new FormData()
-  formData.append('file', file)
 
   try {
+    // Resize image before upload
+    const resizedFile = await resizeImage(file)
+
+    const formData = new FormData()
+    formData.append('file', resizedFile)
+
     const res: any = await $fetch('/api/upload', {
       method: 'POST',
       body: formData
@@ -99,5 +95,46 @@ const uploadFile = async (file: File) => {
   } finally {
     uploading.value = false
   }
+}
+
+const resizeImage = (file: File, maxWidth = 1200, quality = 0.8): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = (event) => {
+      const img = new Image()
+      img.src = event.target?.result as string
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        let width = img.width
+        let height = img.height
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width)
+          width = maxWidth
+        }
+
+        canvas.width = width
+        canvas.height = height
+
+        const ctx = canvas.getContext('2d')
+        ctx?.drawImage(img, 0, 0, width, height)
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const resizedFile = new File([blob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            })
+            resolve(resizedFile)
+          } else {
+            reject(new Error('Canvas is empty'))
+          }
+        }, 'image/jpeg', quality)
+      }
+      img.onerror = (error) => reject(error)
+    }
+    reader.onerror = (error) => reject(error)
+  })
 }
 </script>

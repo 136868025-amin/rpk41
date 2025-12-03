@@ -142,28 +142,50 @@ definePageMeta({
     layout: 'default'
 })
 
-const {
-    schoolConfig,
-    latestNews,
-    upcomingEvents,
-    galleryAlbums,
-    banners,
-    fetchSchoolConfig,
-    fetchLatestNews,
-    fetchUpcomingEvents,
-    fetchGalleryAlbums,
-    fetchBanners
-} = usePublicData()
-
-// Fetch data on mount
-onMounted(async () => {
-    await Promise.all([
-        fetchSchoolConfig(),
-        fetchLatestNews(3),
-        fetchUpcomingEvents(5),
-        fetchGalleryAlbums(8),
-        fetchBanners()
+const { data: homeData } = await useAsyncData('home-data', async () => {
+    const [configRes, newsRes, eventsRes, albumsRes, bannersRes] = await Promise.all([
+        $fetch('/api/config'),
+        $fetch('/api/news'),
+        $fetch('/api/calendar'),
+        $fetch('/api/gallery'),
+        $fetch('/api/banners')
     ])
+
+    return {
+        schoolConfig: (configRes as any).data,
+        latestNews: ((newsRes as any).data || [])
+            .filter((news: any) => news.isPublished)
+            .sort((a: any, b: any) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+            .slice(0, 3),
+        upcomingEvents: ((eventsRes as any).data || [])
+            .filter((event: any) => new Date(event.startDate) >= new Date())
+            .sort((a: any, b: any) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+            .slice(0, 5),
+        galleryAlbums: ((albumsRes as any).data || [])
+            .filter((album: any) => album.isPublished)
+            .sort((a: any, b: any) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())
+            .slice(0, 8),
+        banners: ((bannersRes as any).data || [])
+            .filter((banner: any) => banner.isActive)
+            .sort((a: any, b: any) => a.orderIndex - b.orderIndex)
+    }
+})
+
+const schoolConfig = computed(() => homeData.value?.schoolConfig)
+const latestNews = computed(() => homeData.value?.latestNews || [])
+const upcomingEvents = computed(() => homeData.value?.upcomingEvents || [])
+const galleryAlbums = computed(() => homeData.value?.galleryAlbums || [])
+const banners = computed(() => homeData.value?.banners || [])
+
+// Preload Hero Image
+useHead({
+    link: [
+        {
+            rel: 'preload',
+            as: 'image',
+            href: computed(() => banners.value[0]?.imageUrl || schoolConfig.value?.heroImage || '')
+        }
+    ]
 })
 
 const defaultVision = 'โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา ก่อตั้งขึ้นเมื่อปี พ.ศ. 2508 ด้วยพระมหากรุณาธิคุณของพระบาทสมเด็จพระเจ้าอยู่หัว เพื่อให้การศึกษาแก่เยาวชนในพื้นที่จังหวัดชายแดนภาคใต้'

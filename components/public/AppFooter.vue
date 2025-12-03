@@ -12,10 +12,19 @@
                             <span v-else>ร</span>
                         </div>
                         <div>
-                            <div class="text-lg font-bold text-white">{{ configStore.config?.schoolName ||
-                                'โรงเรียนราชประชานุเคราะห์ 41' }}</div>
-                            <div class="text-sm">{{ configStore.config?.location?.province ?
-                                `จังหวัด${configStore.config.location.province}` : 'จังหวัดยะลา' }}</div>
+                            <div class="text-lg font-bold text-white">
+                                {{
+                                    configStore.config?.schoolName ||
+                                    "โรงเรียนราชประชานุเคราะห์ 41"
+                                }}
+                            </div>
+                            <div class="text-sm">
+                                {{
+                                    configStore.config?.location?.province
+                                        ? `จังหวัด${configStore.config.location.province}`
+                                        : "จังหวัดยะลา"
+                                }}
+                            </div>
                         </div>
                         <a v-if="configStore.config?.socialMedia?.youtube"
                             :href="configStore.config.socialMedia.youtube" target="_blank"
@@ -63,16 +72,22 @@
                     <ul class="space-y-3 text-sm">
                         <li class="flex items-start gap-2">
                             <span class="text-primary-400">📍</span>
-                            <span>{{ configStore.config?.location?.address || '123 ถนนสมมุติ ตำบลสะเตง อำเภอเมือง
-                                จังหวัดยะลา 95000' }}</span>
+                            <span>{{
+                                configStore.config?.location?.address ||
+                                "123 ถนนสมมุติ ตำบลสะเตง อำเภอเมือจังหวัดยะลา 95000"
+                            }}</span>
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="text-primary-400">📞</span>
-                            <span>{{ configStore.config?.contact?.phone || '073-123-456' }}</span>
+                            <span>{{
+                                configStore.config?.contact?.phone || "073-123-456"
+                                }}</span>
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="text-primary-400">📧</span>
-                            <span>{{ configStore.config?.contact?.email || 'info@rpk41.ac.th' }}</span>
+                            <span>{{
+                                configStore.config?.contact?.email || "info@rpk41.ac.th"
+                                }}</span>
                         </li>
                     </ul>
                 </div>
@@ -80,14 +95,17 @@
 
             <!-- Bottom Bar -->
             <div class="border-t border-slate-800 mt-8 pt-8 text-center text-sm text-slate-400">
-                <p>&copy; {{ currentYear }} โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา. All rights reserved.</p>
+                <p>
+                    &copy; {{ currentYear }} โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา. All
+                    rights reserved.
+                </p>
             </div>
         </div>
     </footer>
 </template>
 
 <script setup lang="ts">
-import { useConfigStore } from '~/stores/config'
-const configStore = useConfigStore()
-const currentYear = new Date().getFullYear()
+import { useConfigStore } from "~/stores/config";
+const configStore = useConfigStore();
+const currentYear = new Date().getFullYear();
 </script>
