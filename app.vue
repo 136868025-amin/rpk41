@@ -22,4 +22,9 @@ useSeoMeta({
   ogImage: 'https://rpk41.vercel.app/images/banners/banner-1.png', // Fallback image
   twitterCard: 'summary_large_image',
 })
+
+// Initialize global config
+import { useConfigStore } from '~/stores/config'
+const configStore = useConfigStore()
+await callOnce(configStore.fetchConfig)
 </script>

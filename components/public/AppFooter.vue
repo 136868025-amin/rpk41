@@ -5,26 +5,37 @@
                 <!-- School Info -->
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white font-bold text-2xl">
-                            ร
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white font-bold text-2xl overflow-hidden">
+                            <img v-if="configStore.config?.logo" :src="configStore.config.logo"
+                                class="w-full h-full object-cover" />
+                            <span v-else>ร</span>
                         </div>
                         <div>
-                            <div class="text-lg font-bold text-white">โรงเรียนราชประชานุเคราะห์ 41</div>
-                            <div class="text-sm">จังหวัดยะลา</div>
+                            <div class="text-lg font-bold text-white">{{ configStore.config?.schoolName ||
+                                'โรงเรียนราชประชานุเคราะห์ 41' }}</div>
+                            <div class="text-sm">{{ configStore.config?.location?.province ?
+                                `จังหวัด${configStore.config.location.province}` : 'จังหวัดยะลา' }}</div>
                         </div>
                     </div>
                     <p class="text-sm text-slate-400 leading-relaxed mb-4">
-                        โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา มุ่งมั่นพัฒนาคุณภาพการศึกษา 
-                        เพื่อสร้างคนดี มีความรู้ และพร้อมสู่สังคมโลก
+                        {{ configStore.config?.slogan || 'โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา
+                        มุ่งมั่นพัฒนาคุณภาพการศึกษา เพื่อสร้างคนดี มีความรู้ และพร้อมสู่สังคมโลก' }}
                     </p>
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
+                        <a v-if="configStore.config?.socialMedia?.facebook"
+                            :href="configStore.config.socialMedia.facebook" target="_blank"
+                            class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
                             <span class="text-xl">📘</span>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
+                        <a v-if="configStore.config?.socialMedia?.instagram"
+                            :href="configStore.config.socialMedia.instagram" target="_blank"
+                            class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
                             <span class="text-xl">📷</span>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
+                        <a v-if="configStore.config?.socialMedia?.youtube"
+                            :href="configStore.config.socialMedia.youtube" target="_blank"
+                            class="w-10 h-10 bg-slate-800 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
                             <span class="text-xl">▶️</span>
                         </a>
                     </div>
@@ -68,19 +79,16 @@
                     <ul class="space-y-3 text-sm">
                         <li class="flex items-start gap-2">
                             <span class="text-primary-400">📍</span>
-                            <span>123 ถนนสมมุติ ตำบลสะเตง<br>อำเภอเมือง จังหวัดยะลา 95000</span>
+                            <span>{{ configStore.config?.location?.address || '123 ถนนสมมุติ ตำบลสะเตง อำเภอเมือง
+                                จังหวัดยะลา 95000' }}</span>
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="text-primary-400">📞</span>
-                            <span>073-123-456</span>
+                            <span>{{ configStore.config?.contact?.phone || '073-123-456' }}</span>
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="text-primary-400">📧</span>
-                            <span>info@rpk41.ac.th</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-primary-400">🕐</span>
-                            <span>จันทร์-ศุกร์ 08:00-16:30 น.</span>
+                            <span>{{ configStore.config?.contact?.email || 'info@rpk41.ac.th' }}</span>
                         </li>
                     </ul>
                 </div>
@@ -95,5 +103,7 @@
 </template>
 
 <script setup lang="ts">
+import { useConfigStore } from '~/stores/config'
+const configStore = useConfigStore()
 const currentYear = new Date().getFullYear()
 </script>

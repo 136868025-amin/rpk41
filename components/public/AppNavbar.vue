@@ -5,12 +5,16 @@
                 <!-- Logo -->
                 <NuxtLink to="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     <div
-                        class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                        ร
+                        class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white font-bold text-xl overflow-hidden">
+                        <img v-if="configStore.config?.logo" :src="configStore.config.logo"
+                            class="w-full h-full object-cover" />
+                        <span v-else>ร</span>
                     </div>
                     <div class="hidden sm:block">
-                        <div class="text-lg font-bold text-slate-800">โรงเรียนราชประชานุเคราะห์ 41</div>
-                        <div class="text-xs text-slate-500">จังหวัดยะลา</div>
+                        <div class="text-lg font-bold text-slate-800">{{ configStore.config?.schoolName ||
+                            'โรงเรียนราชประชานุเคราะห์ 41' }}</div>
+                        <div class="text-xs text-slate-500">{{ configStore.config?.location?.province ?
+                            `จังหวัด${configStore.config.location.province}` : 'จังหวัดยะลา' }}</div>
                     </div>
                 </NuxtLink>
 
@@ -87,6 +91,8 @@
 </template>
 
 <script setup lang="ts">
+import { useConfigStore } from '~/stores/config'
+const configStore = useConfigStore()
 const route = useRoute()
 const isMobileMenuOpen = ref(false)
 
