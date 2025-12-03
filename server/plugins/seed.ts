@@ -2,6 +2,7 @@ import { News } from '../models/news.schema'
 import { Personnel } from '../models/personnel.schema'
 import { Banner } from '../models/banner.schema'
 import { SchoolConfig } from '../models/schoolConfig.schema'
+import { User } from '../models/user.schema'
 
 /**
  * Data Seeding Script for Ratchaprachanukroh 41 Yala School
@@ -27,7 +28,20 @@ export default defineNitroPlugin(async () => {
       Personnel.deleteMany({}),
       Banner.deleteMany({}),
       SchoolConfig.deleteMany({}),
+      // User.deleteMany({}), // Be careful deleting users in prod!
     ])
+
+    // 0. Seed Admin User (if not exists)
+    const adminCount = await User.countDocuments({ role: 'admin' })
+    if (adminCount === 0) {
+      await User.create({
+        username: 'admin',
+        password: process.env.ADMIN_PASSWORD || 'admin1234',
+        name: 'System Administrator',
+        role: 'admin',
+      })
+      console.log('✅ Admin user created: admin / admin1234')
+    }
 
     // 1. Seed School Config (Singleton)
     const schoolConfig = await SchoolConfig.create({
