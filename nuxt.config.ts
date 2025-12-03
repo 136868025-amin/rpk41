@@ -12,7 +12,14 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['nuxt-mongoose', '@nuxtjs/google-fonts', '@pinia/nuxt'],
+  modules: ['nuxt-mongoose', '@nuxtjs/google-fonts', '@pinia/nuxt', '@nuxtjs/seo'],
+
+  site: {
+    url: 'https://rpk41.vercel.app',
+    name: 'โรงเรียนราชประชานุเคราะห์ ๔๑',
+    description: 'โรงเรียนราชประชานุเคราะห์ ๔๑ จังหวัดยะลา มุ่งมั่นพัฒนาคุณภาพการศึกษา สร้างคนดี มีคุณธรรม',
+    defaultLocale: 'th',
+  },
   
   googleFonts: {
     families: {
