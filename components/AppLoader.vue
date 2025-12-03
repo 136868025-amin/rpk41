@@ -24,23 +24,19 @@
 
 <script setup lang="ts">
 const nuxtApp = useNuxtApp()
-const isLoading = ref(true)
+const { isLoading, startLoading, finishLoading } = useLoader()
 
 onMounted(() => {
     // Initial load
-    setTimeout(() => {
-        isLoading.value = false
-    }, 800) // Minimum show time for smooth experience
+    finishLoading('initial-load')
 
     // Hook into page navigation
     nuxtApp.hook('page:start', () => {
-        isLoading.value = true
+        startLoading('page-nav')
     })
 
     nuxtApp.hook('page:finish', () => {
-        setTimeout(() => {
-            isLoading.value = false
-        }, 500) // Small delay to prevent flickering
+        finishLoading('page-nav')
     })
 })
 </script>

@@ -27,4 +27,8 @@ useSeoMeta({
 import { useConfigStore } from '~/stores/config'
 const configStore = useConfigStore()
 await callOnce(configStore.fetchConfig)
+
+// Initialize loader
+const { startLoading } = useLoader()
+startLoading('initial-load')
 </script>

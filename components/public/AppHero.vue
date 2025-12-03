@@ -2,7 +2,8 @@
     <section class="relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
         <!-- Background Image -->
         <div class="absolute inset-0">
-            <img :src="props.backgroundImage" alt="School Background" class="w-full h-full object-cover" />
+            <img :src="props.backgroundImage" alt="School Background" class="w-full h-full object-cover"
+                @load="onImageLoad" @error="onImageError" />
             <!-- Gradient Overlay -->
             <div class="absolute inset-0 bg-gradient-to-r from-primary-600/90 to-primary-800/90"></div>
         </div>
@@ -51,6 +52,25 @@ const props = withDefaults(defineProps<{
     backgroundImage: 'https://placehold.co/1920x1080',
     slogan: 'มุ่งมั่น พัฒนา ก้าวไกล สู่สากล'
 })
+
+const { startLoading, finishLoading } = useLoader()
+
+onMounted(() => {
+    startLoading('hero-image')
+
+    // Safety timeout in case image load event doesn't fire
+    setTimeout(() => {
+        finishLoading('hero-image')
+    }, 3000)
+})
+
+const onImageLoad = () => {
+    finishLoading('hero-image')
+}
+
+const onImageError = () => {
+    finishLoading('hero-image')
+}
 </script>
 
 <style scoped>
