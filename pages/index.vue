@@ -1,7 +1,7 @@
 <template>
-    <!-- Hero Section -->
-    <PublicAppHero :background-image="banners[0]?.imageUrl || schoolConfig?.heroImage"
-        :slogan="banners[0]?.title || schoolConfig?.slogan" />
+    <!-- Hero Section with Banner Slider -->
+    <PublicAppHero :banners="banners.length > 0 ? banners : [{ imageUrl: schoolConfig?.heroImage || '' }]"
+        :slogan="schoolConfig?.slogan" />
 
     <!-- About Preview Section -->
     <section class="py-16 md:py-24">
@@ -9,8 +9,8 @@
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <!-- Image -->
                 <div class="rounded-2xl overflow-hidden shadow-xl">
-                    <img :src="schoolConfig?.aboutImage || 'https://placehold.co/800x600'" alt="School"
-                        class="w-full h-full object-cover" />
+                    <NuxtImg :src="schoolConfig?.aboutImage || 'https://placehold.co/800x600'" alt="School"
+                        class="w-full h-full object-cover" loading="lazy" />
                 </div>
 
                 <!-- Content -->
@@ -122,8 +122,8 @@
             <div v-if="galleryAlbums.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <NuxtLink v-for="album in galleryAlbums" :key="album._id" :to="`/gallery/${album._id}`"
                     class="aspect-square rounded-xl overflow-hidden bg-slate-200 hover:scale-105 transition-transform cursor-pointer group relative">
-                    <img :src="album.coverImage || 'https://via.placeholder.com/400'" :alt="album.title"
-                        class="w-full h-full object-cover" />
+                    <NuxtImg :src="album.coverImage || 'https://via.placeholder.com/400'" :alt="album.title"
+                        class="w-full h-full object-cover" loading="lazy" />
                     <div
                         class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <span class="text-white font-bold text-center px-2">{{ album.title }}</span>
@@ -142,12 +142,11 @@ definePageMeta({
     layout: 'default'
 })
 
-const { data: homeData } = await useAsyncData('home-data', async () => {
-    const [configRes, newsRes, eventsRes, albumsRes, bannersRes] = await Promise.all([
+// Critical data - loads immediately (above-the-fold content)
+const { data: criticalData } = await useAsyncData('home-critical', async () => {
+    const [configRes, newsRes, bannersRes] = await Promise.all([
         $fetch('/api/config'),
         $fetch('/api/news'),
-        $fetch('/api/calendar'),
-        $fetch('/api/gallery'),
         $fetch('/api/banners')
     ])
 
@@ -157,6 +156,20 @@ const { data: homeData } = await useAsyncData('home-data', async () => {
             .filter((news: any) => news.isPublished)
             .sort((a: any, b: any) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
             .slice(0, 3),
+        banners: ((bannersRes as any).data || [])
+            .filter((banner: any) => banner.isActive)
+            .sort((a: any, b: any) => a.orderIndex - b.orderIndex)
+    }
+})
+
+// Secondary data - loads lazily (below-the-fold content)
+const { data: secondaryData } = useLazyAsyncData('home-secondary', async () => {
+    const [eventsRes, albumsRes] = await Promise.all([
+        $fetch('/api/calendar'),
+        $fetch('/api/gallery')
+    ])
+
+    return {
         upcomingEvents: ((eventsRes as any).data || [])
             .filter((event: any) => new Date(event.startDate) >= new Date())
             .sort((a: any, b: any) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
@@ -164,18 +177,15 @@ const { data: homeData } = await useAsyncData('home-data', async () => {
         galleryAlbums: ((albumsRes as any).data || [])
             .filter((album: any) => album.isPublished)
             .sort((a: any, b: any) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())
-            .slice(0, 8),
-        banners: ((bannersRes as any).data || [])
-            .filter((banner: any) => banner.isActive)
-            .sort((a: any, b: any) => a.orderIndex - b.orderIndex)
+            .slice(0, 8)
     }
 })
 
-const schoolConfig = computed(() => homeData.value?.schoolConfig)
-const latestNews = computed(() => homeData.value?.latestNews || [])
-const upcomingEvents = computed(() => homeData.value?.upcomingEvents || [])
-const galleryAlbums = computed(() => homeData.value?.galleryAlbums || [])
-const banners = computed(() => homeData.value?.banners || [])
+const schoolConfig = computed(() => criticalData.value?.schoolConfig)
+const latestNews = computed(() => criticalData.value?.latestNews || [])
+const banners = computed(() => criticalData.value?.banners || [])
+const upcomingEvents = computed(() => secondaryData.value?.upcomingEvents || [])
+const galleryAlbums = computed(() => secondaryData.value?.galleryAlbums || [])
 
 // Preload Hero Image
 useHead({

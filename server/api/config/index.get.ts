@@ -4,8 +4,9 @@ import { SchoolConfig } from '~/server/models/schoolConfig.schema'
  * GET /api/config
  * Get school configuration (singleton)
  * Returns the single school config document
+ * Cached for 5 minutes to improve performance
  */
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   try {
     // SchoolConfig is a singleton, so we fetch the first (and only) document
     const config = await SchoolConfig.findOne().lean()
@@ -26,4 +27,7 @@ export default defineEventHandler(async (event) => {
       message: error.message || 'Failed to fetch school configuration',
     })
   }
+}, {
+  maxAge: 60 * 5, // Cache for 5 minutes (300 seconds)
+  name: 'config-cache',
 })

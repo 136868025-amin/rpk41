@@ -42,7 +42,7 @@
                                     </svg>
                                 </div>
                                 <span class="text-slate-600 group-hover:text-slate-900 transition-colors">{{ label
-                                    }}</span>
+                                }}</span>
                             </label>
                         </div>
                     </div>
@@ -53,7 +53,15 @@
                 <!-- Main Calendar -->
                 <div class="lg:col-span-3">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 calendar-wrapper">
-                        <FullCalendar :options="calendarOptions" />
+                        <!-- Loading Skeleton -->
+                        <div v-if="calendarPlugins.length === 0" class="animate-pulse">
+                            <div class="h-10 bg-slate-200 rounded mb-4"></div>
+                            <div class="grid grid-cols-7 gap-2">
+                                <div v-for="i in 35" :key="i" class="h-20 bg-slate-100 rounded"></div>
+                            </div>
+                        </div>
+                        <!-- Calendar (only when plugins loaded) -->
+                        <FullCalendar v-else :options="calendarOptions" />
                     </div>
                 </div>
             </div>
@@ -162,11 +170,23 @@
 </template>
 
 <script setup lang="ts">
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import listPlugin from '@fullcalendar/list'
-import thLocale from '@fullcalendar/core/locales/th'
+import { defineAsyncComponent } from 'vue'
+
+// Lazy load FullCalendar components (~100KB saved from main bundle)
+const FullCalendar = defineAsyncComponent(() =>
+    import('@fullcalendar/vue3').then(m => m.default)
+)
+
+// Lazy load plugins only when needed
+const loadCalendarPlugins = async () => {
+    const [dayGridPlugin, interactionPlugin, listPlugin, thLocale] = await Promise.all([
+        import('@fullcalendar/daygrid').then(m => m.default),
+        import('@fullcalendar/interaction').then(m => m.default),
+        import('@fullcalendar/list').then(m => m.default),
+        import('@fullcalendar/core/locales/th').then(m => m.default)
+    ])
+    return { dayGridPlugin, interactionPlugin, listPlugin, thLocale }
+}
 
 definePageMeta({
     layout: 'default'
@@ -190,9 +210,18 @@ const eventLabels: Record<string, string> = {
 // State
 const selectedFilters = ref<string[]>(Object.keys(eventLabels))
 const selectedEvent = ref<any>(null)
+const calendarPlugins = ref<any[]>([])
+const thLocale = ref<any>(null)
 
 // Fetch Events
 const { data: response } = await useFetch('/api/calendar')
+
+// Load plugins on mount
+onMounted(async () => {
+    const plugins = await loadCalendarPlugins()
+    calendarPlugins.value = [plugins.dayGridPlugin, plugins.interactionPlugin, plugins.listPlugin]
+    thLocale.value = plugins.thLocale
+})
 
 const allEvents = computed(() => {
     return (response.value?.data || []).map((event: any) => ({
@@ -214,11 +243,11 @@ const filteredEvents = computed(() => {
     return allEvents.value.filter((event: any) => selectedFilters.value.includes(event.extendedProps.type))
 })
 
-// Calendar Options
+// Calendar Options - uses lazy-loaded plugins
 const calendarOptions = computed(() => ({
-    plugins: [dayGridPlugin, interactionPlugin, listPlugin],
+    plugins: calendarPlugins.value,
     initialView: 'dayGridMonth',
-    locale: thLocale,
+    locale: thLocale.value,
     headerToolbar: {
         left: 'prev,next today',
         center: 'title',

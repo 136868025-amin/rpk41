@@ -35,9 +35,17 @@
                 </select>
             </div>
 
-            <!-- Loading State -->
-            <div v-if="pending" class="flex justify-center py-12">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            <!-- Loading Skeleton -->
+            <div v-if="pending" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div v-for="i in 6" :key="i" class="bg-white rounded-2xl shadow-md overflow-hidden animate-pulse">
+                    <div class="aspect-video bg-slate-200"></div>
+                    <div class="p-6">
+                        <div class="w-20 h-5 bg-slate-200 rounded-full mb-3"></div>
+                        <div class="h-6 bg-slate-200 rounded mb-2"></div>
+                        <div class="h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
+                        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- News Grid -->

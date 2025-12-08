@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['nuxt-mongoose', '@nuxtjs/google-fonts', '@pinia/nuxt', '@nuxtjs/seo'],
+  modules: ['nuxt-mongoose', '@nuxtjs/google-fonts', '@pinia/nuxt', '@nuxtjs/seo', '@nuxt/image'],
 
   site: {
     url: 'https://rpk41.vercel.app',
@@ -23,10 +23,11 @@ export default defineNuxtConfig({
   
   googleFonts: {
     families: {
-      Prompt: [300, 400, 500, 600, 700],
-      Sarabun: [300, 400, 500, 600, 700],
+      Prompt: [400, 600],   // Reduced from 5 to 2 weights (~150KB savings)
+      Sarabun: [400, 600],  // Reduced from 5 to 2 weights (~150KB savings)
     },
     display: 'swap',
+    preload: true,
   },
 
   mongoose: {

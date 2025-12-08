@@ -7,7 +7,7 @@
                     <div class="flex items-center gap-3 mb-4">
                         <div
                             class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white font-bold text-2xl overflow-hidden">
-                            <img v-if="configStore.config?.logo" :src="configStore.config.logo"
+                            <NuxtImg v-if="configStore.config?.logo" :src="configStore.config.logo"
                                 class="w-full h-full object-cover" />
                             <span v-else>ร</span>
                         </div>
@@ -96,7 +96,8 @@
             <!-- Bottom Bar -->
             <div class="border-t border-slate-800 mt-8 pt-8 text-center text-sm text-slate-400">
                 <p>
-                    &copy; {{ currentYear }} โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา. All
+                    &copy; <ClientOnly><template #fallback>2024</template>{{ currentYear }}</ClientOnly>
+                    โรงเรียนราชประชานุเคราะห์ 41 จังหวัดยะลา. All
                     rights reserved.
                 </p>
             </div>
@@ -107,5 +108,5 @@
 <script setup lang="ts">
 import { useConfigStore } from "~/stores/config";
 const configStore = useConfigStore();
-const currentYear = new Date().getFullYear();
+const currentYear = new Date().getFullYear()
 </script>

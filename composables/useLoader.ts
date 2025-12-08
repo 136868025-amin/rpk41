@@ -10,12 +10,12 @@ export const useLoader = () => {
   const finishLoading = (id: string = 'global') => {
     loadingQueue.value.delete(id)
     if (loadingQueue.value.size === 0) {
-      // Add a small delay to ensure smooth transition
+      // Reduced delay for faster perceived performance
       setTimeout(() => {
         if (loadingQueue.value.size === 0) {
           isLoading.value = false
         }
-      }, 500)
+      }, 100) // Reduced from 500ms to 100ms
     }
   }
 

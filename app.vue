@@ -23,10 +23,10 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-// Initialize global config
+// Initialize global config (non-blocking - loads in background)
 import { useConfigStore } from '~/stores/config'
 const configStore = useConfigStore()
-await callOnce(configStore.fetchConfig)
+callOnce(configStore.fetchConfig) // Removed await - page renders immediately
 
 // Initialize loader
 const { startLoading } = useLoader()

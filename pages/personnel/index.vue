@@ -9,9 +9,32 @@
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Loading State -->
-            <div v-if="pending" class="flex justify-center py-12">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            <!-- Loading Skeleton -->
+            <div v-if="pending" class="space-y-16">
+                <!-- Director Skeleton -->
+                <div class="flex justify-center">
+                    <div
+                        class="bg-white rounded-2xl shadow-lg overflow-hidden max-w-2xl w-full flex flex-col md:flex-row animate-pulse">
+                        <div class="md:w-2/5 aspect-[3/4] bg-slate-200"></div>
+                        <div class="p-8 md:w-3/5 flex flex-col justify-center">
+                            <div class="w-32 h-6 bg-slate-200 rounded-full mb-4"></div>
+                            <div class="h-8 bg-slate-200 rounded mb-2"></div>
+                            <div class="h-4 bg-slate-200 rounded w-2/3 mb-6"></div>
+                            <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Staff Grid Skeleton -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <div v-for="i in 8" :key="i"
+                        class="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4 animate-pulse">
+                        <div class="w-16 h-16 bg-slate-200 rounded-full flex-shrink-0"></div>
+                        <div class="flex-1">
+                            <div class="h-4 bg-slate-200 rounded w-24 mb-2"></div>
+                            <div class="h-3 bg-slate-200 rounded w-16"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-else class="space-y-16">
@@ -27,8 +50,9 @@
                         <NuxtLink :to="`/personnel/${director._id}`"
                             class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden max-w-2xl w-full flex flex-col md:flex-row group border border-slate-100">
                             <div class="md:w-2/5 relative overflow-hidden">
-                                <img :src="director.photo || 'https://placehold.co/600x800'" :alt="director.name"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <NuxtImg :src="director.photo || 'https://placehold.co/600x800'" :alt="director.name"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    loading="lazy" />
                             </div>
                             <div class="p-8 md:w-3/5 flex flex-col justify-center text-center md:text-left">
                                 <span
@@ -54,8 +78,9 @@
                             class="bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden group text-center p-6 border border-slate-100">
                             <div
                                 class="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-slate-50 shadow-inner relative">
-                                <img :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <NuxtImg :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy" />
                             </div>
                             <h3
                                 class="text-lg font-bold text-slate-800 mb-1 group-hover:text-primary-600 transition-colors">
@@ -71,8 +96,8 @@
                         <NuxtLink v-for="person in otherAdmins" :key="person._id" :to="`/personnel/${person._id}`"
                             class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group p-4 border border-slate-100 flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-50 flex-shrink-0">
-                                <img :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
-                                    class="w-full h-full object-cover" />
+                                <NuxtImg :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
+                                    class="w-full h-full object-cover" loading="lazy" />
                             </div>
                             <div>
                                 <h3
@@ -96,8 +121,9 @@
                             :to="`/personnel/${person._id}`"
                             class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group p-4 border border-slate-100 flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-50 flex-shrink-0">
-                                <img :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <NuxtImg :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy" />
                             </div>
                             <div>
                                 <h3
@@ -121,8 +147,9 @@
                             :to="`/personnel/${person._id}`"
                             class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group p-4 border border-slate-100 flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-50 flex-shrink-0">
-                                <img :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <NuxtImg :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy" />
                             </div>
                             <div>
                                 <h3

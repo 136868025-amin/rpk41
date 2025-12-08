@@ -1,15 +1,20 @@
 <template>
     <section class="relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
-        <!-- Background Image -->
+        <!-- Background Images Slider -->
         <div class="absolute inset-0">
-            <img :src="props.backgroundImage" alt="School Background" class="w-full h-full object-cover"
-                @load="onImageLoad" @error="onImageError" />
+            <!-- All banner images stacked, only one visible at a time -->
+            <div v-for="(banner, index) in banners" :key="index"
+                class="absolute inset-0 transition-opacity duration-1000"
+                :class="currentIndex === index ? 'opacity-100 z-10' : 'opacity-0 z-0'">
+                <NuxtImg :src="banner.imageUrl" :alt="banner.title || 'Banner'" class="w-full h-full object-cover"
+                    :loading="index === 0 ? 'eager' : 'lazy'" />
+            </div>
             <!-- Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-r from-primary-600/90 to-primary-800/90"></div>
+            <div class="absolute inset-0 z-20 bg-gradient-to-r from-primary-600/90 to-primary-800/90"></div>
         </div>
 
         <!-- Content -->
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+        <div class="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
             <!-- School Name -->
             <h1 class="text-4xl md:text-6xl font-bold mb-4 animate-fade-in">
                 โรงเรียนราชประชานุเคราะห์ 41
@@ -18,7 +23,7 @@
                 Ratchaprachanukroh 41 School
             </p>
             <p class="text-lg md:text-xl mb-8 text-primary-50">
-                {{ props.slogan }}
+                {{ currentBanner?.title || slogan }}
             </p>
 
             <!-- CTA Buttons -->
@@ -32,45 +37,91 @@
                     ดูข่าวสาร
                 </NuxtLink>
             </div>
-
-            <!-- Scroll Indicator -->
-            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-            </div>
         </div>
+
+        <!-- Slide Indicators -->
+        <div v-if="banners.length > 1" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex gap-2">
+            <button v-for="(_, index) in banners" :key="index" @click="goToSlide(index)"
+                class="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer" :class="currentIndex === index
+                    ? 'bg-white w-8'
+                    : 'bg-white/50 hover:bg-white/80'">
+            </button>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button v-if="banners.length > 1" @click="prevSlide"
+            class="absolute left-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/20 hover:bg-white/40 transition-colors backdrop-blur-sm cursor-pointer">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        <button v-if="banners.length > 1" @click="nextSlide"
+            class="absolute right-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/20 hover:bg-white/40 transition-colors backdrop-blur-sm cursor-pointer">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
     </section>
 </template>
 
 <script setup lang="ts">
+interface Banner {
+    imageUrl: string
+    title?: string
+}
+
 const props = withDefaults(defineProps<{
-    backgroundImage?: string
+    banners?: Banner[]
     slogan?: string
 }>(), {
-    backgroundImage: 'https://placehold.co/1920x1080',
+    banners: () => [],
     slogan: 'มุ่งมั่น พัฒนา ก้าวไกล สู่สากล'
 })
 
-const { startLoading, finishLoading } = useLoader()
+const currentIndex = ref(0)
+const autoplayInterval = ref<ReturnType<typeof setInterval> | null>(null)
+
+const currentBanner = computed(() => props.banners[currentIndex.value])
+
+const nextSlide = () => {
+    if (props.banners.length > 1) {
+        currentIndex.value = (currentIndex.value + 1) % props.banners.length
+    }
+}
+
+const prevSlide = () => {
+    if (props.banners.length > 1) {
+        currentIndex.value = (currentIndex.value - 1 + props.banners.length) % props.banners.length
+    }
+}
+
+const goToSlide = (index: number) => {
+    currentIndex.value = index
+    resetAutoplay()
+}
+
+const resetAutoplay = () => {
+    if (autoplayInterval.value) {
+        clearInterval(autoplayInterval.value)
+    }
+    startAutoplay()
+}
+
+const startAutoplay = () => {
+    if (props.banners.length > 1) {
+        autoplayInterval.value = setInterval(nextSlide, 5000) // Change every 5 seconds
+    }
+}
 
 onMounted(() => {
-    startLoading('hero-image')
-
-    // Safety timeout in case image load event doesn't fire
-    setTimeout(() => {
-        finishLoading('hero-image')
-    }, 3000)
+    startAutoplay()
 })
 
-const onImageLoad = () => {
-    finishLoading('hero-image')
-}
-
-const onImageError = () => {
-    finishLoading('hero-image')
-}
+onUnmounted(() => {
+    if (autoplayInterval.value) {
+        clearInterval(autoplayInterval.value)
+    }
+})
 </script>
 
 <style scoped>

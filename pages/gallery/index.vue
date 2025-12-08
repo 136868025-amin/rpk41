@@ -9,9 +9,27 @@
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Loading State -->
-            <div v-if="pending" class="flex justify-center py-12">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            <!-- Loading Skeleton -->
+            <div v-if="pending" class="space-y-12">
+                <!-- Highlight Skeleton -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="aspect-video md:h-[400px] bg-slate-200 rounded-2xl animate-pulse"></div>
+                    <div class="grid grid-rows-2 gap-6">
+                        <div class="h-[190px] bg-slate-200 rounded-2xl animate-pulse"></div>
+                        <div class="h-[190px] bg-slate-200 rounded-2xl animate-pulse"></div>
+                    </div>
+                </div>
+                <!-- Grid Skeleton -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div v-for="i in 6" :key="i" class="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
+                        <div class="aspect-[4/3] bg-slate-200"></div>
+                        <div class="p-6">
+                            <div class="h-6 bg-slate-200 rounded mb-3"></div>
+                            <div class="h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
+                            <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-else>
@@ -24,9 +42,10 @@
                         <!-- Main Highlight (First Item) -->
                         <NuxtLink :to="`/gallery/${highlightAlbums[0]._id}`"
                             class="relative aspect-video md:aspect-auto md:h-[400px] rounded-2xl overflow-hidden group shadow-lg">
-                            <img :src="highlightAlbums[0].coverImage || 'https://placehold.co/800x600'"
+                            <NuxtImg :src="highlightAlbums[0].coverImage || 'https://placehold.co/800x600'"
                                 :alt="highlightAlbums[0].title"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                loading="lazy" />
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
                                 <span
@@ -45,8 +64,9 @@
                             <NuxtLink v-for="album in highlightAlbums.slice(1, 3)" :key="album._id"
                                 :to="`/gallery/${album._id}`"
                                 class="relative rounded-2xl overflow-hidden group shadow-md h-[190px]">
-                                <img :src="album.coverImage || 'https://placehold.co/600x400'" :alt="album.title"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <NuxtImg :src="album.coverImage || 'https://placehold.co/600x400'" :alt="album.title"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    loading="lazy" />
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
                                     <h3 class="text-lg font-bold text-white mb-1 line-clamp-1">
@@ -78,8 +98,9 @@
                         class="bg-white rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group border border-slate-100">
                         <!-- Cover Image -->
                         <div class="aspect-[4/3] relative overflow-hidden">
-                            <img :src="album.coverImage || 'https://placehold.co/600x400'" :alt="album.title"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                            <NuxtImg :src="album.coverImage || 'https://placehold.co/600x400'" :alt="album.title"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                loading="lazy" />
 
                             <!-- Category Badge -->
                             <div class="absolute top-4 right-4">

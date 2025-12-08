@@ -3,8 +3,9 @@
         class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
         <!-- Image -->
         <div class="aspect-video overflow-hidden bg-slate-200">
-            <img :src="news.coverImage || 'https://via.placeholder.com/400x225'" :alt="news.title"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            <NuxtImg :src="news.coverImage || 'https://via.placeholder.com/400x225'" :alt="news.title"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                loading="lazy" />
         </div>
 
         <!-- Content -->

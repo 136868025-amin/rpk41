@@ -1,23 +1,9 @@
 <template>
-    <Transition name="fade">
+    <!-- Top Progress Bar (YouTube-style) -->
+    <Transition name="progress">
         <div v-if="isLoading"
-            class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm">
-            <div class="relative flex flex-col items-center">
-                <!-- Logo or Icon Animation -->
-                <div class="mb-4 relative">
-                    <div class="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin">
-                    </div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <span class="text-xs font-bold text-primary-800">RPK 41</span>
-                    </div>
-                </div>
-
-                <!-- Text -->
-                <div class="text-center">
-                    <h3 class="text-xl font-bold text-gray-800 mb-1 font-heading tracking-wide">กำลังโหลด</h3>
-                    <p class="text-sm text-gray-500 animate-pulse">กรุณารอสักครู่...</p>
-                </div>
-            </div>
+            class="fixed top-0 left-0 right-0 z-[9999] h-1 bg-primary-100/50 backdrop-blur-sm overflow-hidden">
+            <div class="h-full bg-primary-600 progress-bar"></div>
         </div>
     </Transition>
 </template>
@@ -42,13 +28,36 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
+/* Progress bar animation */
+.progress-bar {
+    animation: loading 1.5s ease-in-out infinite;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+@keyframes loading {
+    0% {
+        width: 0%;
+        margin-left: 0%;
+    }
+
+    50% {
+        width: 70%;
+        margin-left: 15%;
+    }
+
+    100% {
+        width: 100%;
+        margin-left: 0%;
+    }
+}
+
+/* Transition */
+.progress-enter-active,
+.progress-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.progress-enter-from,
+.progress-leave-to {
     opacity: 0;
 }
 </style>

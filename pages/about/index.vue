@@ -9,16 +9,32 @@
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Loading State -->
-            <div v-if="pending" class="flex justify-center py-12">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            <!-- Loading Skeleton -->
+            <div v-if="pending" class="space-y-12 animate-pulse">
+                <!-- Hero Skeleton -->
+                <div class="h-[300px] md:h-[400px] bg-slate-200 rounded-2xl"></div>
+                <!-- Vision/Mission Skeleton -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-sm p-8">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full mb-6"></div>
+                        <div class="h-8 bg-slate-200 rounded w-1/2 mb-4"></div>
+                        <div class="h-4 bg-slate-200 rounded mb-2"></div>
+                        <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-8">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full mb-6"></div>
+                        <div class="h-8 bg-slate-200 rounded w-1/2 mb-4"></div>
+                        <div class="h-4 bg-slate-200 rounded mb-2"></div>
+                        <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                    </div>
+                </div>
             </div>
 
             <div v-else-if="schoolConfig" class="space-y-12">
                 <!-- Hero Image & Slogan -->
                 <div class="relative rounded-2xl overflow-hidden shadow-lg h-[300px] md:h-[400px]">
-                    <img :src="schoolConfig.aboutImage || schoolConfig.heroImage || 'https://placehold.co/1200x600'"
-                        class="w-full h-full object-cover" />
+                    <NuxtImg :src="schoolConfig.aboutImage || schoolConfig.heroImage || 'https://placehold.co/1200x600'"
+                        class="w-full h-full object-cover" loading="lazy" />
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-center p-6">
                         <div>
                             <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 shadow-sm">

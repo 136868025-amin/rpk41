@@ -3,6 +3,7 @@ import { News } from '~/server/models/news.schema'
 /**
  * GET /api/news
  * List news articles with optional filters
+ * Cached for 1 minute to improve performance
  * 
  * Query Parameters:
  * - category: Filter by category (academic|activity|general)
@@ -10,7 +11,7 @@ import { News } from '~/server/models/news.schema'
  * - limit: Number of items to return (default: 10)
  * - skip: Number of items to skip for pagination (default: 0)
  */
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   try {
     const query = getQuery(event)
     
@@ -62,5 +63,12 @@ export default defineEventHandler(async (event) => {
       statusCode: 500,
       message: error.message || 'Failed to fetch news',
     })
+  }
+}, {
+  maxAge: 60, // Cache for 1 minute
+  name: 'news-cache',
+  getKey: (event) => {
+    const query = getQuery(event)
+    return `news-${query.category || 'all'}-${query.limit || 10}-${query.skip || 0}-${query.isPublished || 'true'}`
   }
 })

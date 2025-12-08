@@ -17,7 +17,7 @@
             <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <!-- Cover Image -->
                 <div class="aspect-video relative">
-                    <img :src="news.coverImage || 'https://placehold.co/800x400'" :alt="news.title"
+                    <NuxtImg :src="news.coverImage || 'https://placehold.co/800x400'" :alt="news.title"
                         class="w-full h-full object-cover" />
                     <div class="absolute top-4 left-4">
                         <span class="px-3 py-1 bg-primary-600 text-white text-sm font-bold rounded-full shadow-lg">
@@ -51,9 +51,9 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             <div v-for="(img, index) in news.gallery" :key="index"
                                 class="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer aspect-video">
-                                <img :src="img"
+                                <NuxtImg :src="img"
                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                    @click="openLightbox(index)" />
+                                    @click="openLightbox(index)" loading="lazy" />
                             </div>
                         </div>
                     </div>
