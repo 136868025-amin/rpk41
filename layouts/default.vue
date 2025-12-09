@@ -14,5 +14,8 @@
 
         <!-- Scroll to Top Button -->
         <PublicScrollToTop />
+
+        <!-- Announcement Popup -->
+        <PublicAnnouncementPopup />
     </div>
 </template>

@@ -8,7 +8,7 @@
                     <img v-if="configStore.config?.logo" :src="configStore.config.logo"
                         class="w-full h-full object-cover" />
                     <span v-else class="text-lg font-bold">{{ configStore.config?.schoolNameEn?.charAt(0) || 'A'
-                    }}</span>
+                        }}</span>
                 </div>
                 <div>
                     <h2 class="text-sm font-bold tracking-wide">Admin Panel</h2>
@@ -43,6 +43,13 @@
                 active-class="bg-blue-600/10 text-blue-400 font-medium border border-blue-600/20 shadow-sm shadow-blue-900/20">
                 <span class="text-xl group-hover:scale-110 transition-transform duration-200">📩</span>
                 <span class="text-sm">กล่องข้อความ (Inbox)</span>
+            </NuxtLink>
+
+            <NuxtLink to="/admin/announcements"
+                class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50 hover:text-white transition-all group"
+                active-class="bg-blue-600/10 text-blue-400 font-medium border border-blue-600/20 shadow-sm shadow-blue-900/20">
+                <span class="text-xl group-hover:scale-110 transition-transform duration-200">📢</span>
+                <span class="text-sm">ประกาศ (Popup)</span>
             </NuxtLink>
 
             <NuxtLink to="/admin/news"

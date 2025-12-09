@@ -289,7 +289,7 @@
                 <span class="text-4xl mb-2 block">📭</span>
                 <p>No recent activity</p>
               </div>
-              <div v-else class="space-y-3">
+              <div v-else class="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
                 <div v-for="log in logs" :key="log._id"
                   class="flex items-start gap-3 text-sm p-2 hover:bg-slate-50 rounded-lg transition-colors">
                   <div class="mt-0.5 text-xl">
