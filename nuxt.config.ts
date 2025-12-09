@@ -89,6 +89,7 @@ export default defineNuxtConfig({
     compressPublicAssets: true,
     prerender: {
       crawlLinks: true,
+      ignore: ['/admin', '/admin/**'],
     },
   },
 })

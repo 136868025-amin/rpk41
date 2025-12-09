@@ -1,4 +1,9 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  // Skip auth check during SSG/prerender
+  if (import.meta.prerender) {
+    return
+  }
+
   console.log('[Middleware] Running for route:', to.path)
   const { user, fetchUser } = useAuth()
 
