@@ -171,6 +171,7 @@ const menuItems = [
     { path: '/news', label: 'ข่าวสาร' },
     { path: '/gallery', label: 'แกลเลอรี่' },
     { path: '/calendar', label: 'ปฏิทิน' },
+    { path: '/documents', label: 'เอกสาร' },
     { path: '/personnel', label: 'บุคลากร' },
     { path: '/about', label: 'เกี่ยวกับเรา' },
     { path: '/contact', label: 'ติดต่อเรา' },

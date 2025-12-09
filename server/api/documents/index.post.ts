@@ -4,7 +4,13 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
     
-    const newDocument = await Document.create(body)
+    const newDocument = await Document.create({
+      title: body.title,
+      category: body.category,
+      fileUrl: body.filePath || body.fileUrl, // Support both field names
+      fileSize: body.fileSize,
+      isPublished: body.isPublished ?? true
+    })
     
     // Log activity
     await logActivity('create', 'documents', `Created document: "${body.title || 'Untitled'}"`)
