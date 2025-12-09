@@ -84,7 +84,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <label class="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                     <span>🎯</span>
                                     <span>Vision</span>
                                 </label>
@@ -94,7 +94,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <label class="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                     <span>🚀</span>
                                     <span>Mission</span>
                                 </label>
@@ -127,7 +127,7 @@
                                 placeholder="+66 1234 5679" />
 
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <label class="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                     <span>🏢</span>
                                     <span>Address</span>
                                 </label>

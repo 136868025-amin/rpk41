@@ -1,10 +1,11 @@
 <template>
-    <div class="min-h-screen bg-slate-50 pb-12">
+    <div class="min-h-screen bg-slate-50 dark:bg-slate-900 pb-12">
         <!-- Header -->
-        <div class="bg-white border-b border-slate-200">
+        <div class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">ข่าวสารและกิจกรรม</h1>
-                <p class="text-slate-600 text-lg">ติดตามความเคลื่อนไหวและกิจกรรมล่าสุดของโรงเรียน</p>
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4">ข่าวสารและกิจกรรม</h1>
+                <p class="text-slate-600 dark:text-slate-300 text-lg">ติดตามความเคลื่อนไหวและกิจกรรมล่าสุดของโรงเรียน
+                </p>
             </div>
         </div>
 
@@ -14,7 +15,7 @@
                 <!-- Search -->
                 <div class="relative flex-1">
                     <input v-model="searchQuery" type="text" placeholder="ค้นหาข่าวสาร..."
-                        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+                        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
                     <span class="absolute left-3 top-3 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -26,7 +27,7 @@
 
                 <!-- Category Filter -->
                 <select v-model="selectedCategory"
-                    class="w-full md:w-48 px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    class="w-full md:w-48 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                     <option value="">ทุกหมวดหมู่</option>
                     <option value="general">ข่าวทั่วไป</option>
                     <option value="academic">วิชาการ</option>
@@ -37,10 +38,11 @@
 
             <!-- Loading Skeleton -->
             <div v-if="pending" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div v-for="i in 6" :key="i" class="bg-white rounded-2xl shadow-md overflow-hidden animate-pulse">
-                    <div class="aspect-video bg-slate-200"></div>
+                <div v-for="i in 6" :key="i"
+                    class="bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden animate-pulse">
+                    <div class="aspect-video bg-slate-200 dark:bg-slate-700"></div>
                     <div class="p-6">
-                        <div class="w-20 h-5 bg-slate-200 rounded-full mb-3"></div>
+                        <div class="w-20 h-5 bg-slate-200 dark:bg-slate-700 rounded-full mb-3"></div>
                         <div class="h-6 bg-slate-200 rounded mb-2"></div>
                         <div class="h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
                         <div class="h-4 bg-slate-200 rounded w-1/2"></div>
@@ -54,27 +56,28 @@
             </div>
 
             <!-- Empty State -->
-            <div v-else class="text-center py-16 bg-white rounded-xl border border-slate-200 shadow-sm">
+            <div v-else
+                class="text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                 <div class="text-6xl mb-4">📰</div>
-                <h3 class="text-xl font-bold text-slate-800 mb-2">ไม่พบข่าวสาร</h3>
-                <p class="text-slate-500">ลองเปลี่ยนคำค้นหาหรือหมวดหมู่</p>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">ไม่พบข่าวสาร</h3>
+                <p class="text-slate-500 dark:text-slate-400">ลองเปลี่ยนคำค้นหาหรือหมวดหมู่</p>
             </div>
 
             <!-- Pagination -->
             <div v-if="totalPages > 1" class="flex justify-center mt-12 gap-2">
                 <button @click="page--" :disabled="page === 1"
-                    class="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                     ก่อนหน้า
                 </button>
                 <div class="flex gap-1">
                     <button v-for="p in totalPages" :key="p" @click="page = p"
                         class="w-10 h-10 flex items-center justify-center rounded-lg transition-colors"
-                        :class="page === p ? 'bg-primary-600 text-white' : 'bg-white border border-slate-200 hover:bg-slate-50'">
+                        :class="page === p ? 'bg-primary-600 text-white' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700'">
                         {{ p }}
                     </button>
                 </div>
                 <button @click="page++" :disabled="page === totalPages"
-                    class="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                     ถัดไป
                 </button>
             </div>

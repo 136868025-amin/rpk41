@@ -1,10 +1,10 @@
 <template>
-    <div class="min-h-screen bg-slate-50 pb-12">
+    <div class="min-h-screen bg-slate-50 dark:bg-slate-900 pb-12">
         <!-- Header -->
-        <div class="bg-white border-b border-slate-200">
+        <div class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">แกลเลอรี่รูปภาพ</h1>
-                <p class="text-slate-600 text-lg">ประมวลภาพกิจกรรมต่างๆ ของโรงเรียน</p>
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4">แกลเลอรี่รูปภาพ</h1>
+                <p class="text-slate-600 dark:text-slate-300 text-lg">ประมวลภาพกิจกรรมต่างๆ ของโรงเรียน</p>
             </div>
         </div>
 
@@ -13,7 +13,8 @@
             <div v-if="pending" class="space-y-12">
                 <!-- Highlight Skeleton -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="aspect-video md:h-[400px] bg-slate-200 rounded-2xl animate-pulse"></div>
+                    <div class="aspect-video md:h-[400px] bg-slate-200 dark:bg-slate-700 rounded-2xl animate-pulse">
+                    </div>
                     <div class="grid grid-rows-2 gap-6">
                         <div class="h-[190px] bg-slate-200 rounded-2xl animate-pulse"></div>
                         <div class="h-[190px] bg-slate-200 rounded-2xl animate-pulse"></div>
@@ -21,7 +22,8 @@
                 </div>
                 <!-- Grid Skeleton -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div v-for="i in 6" :key="i" class="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
+                    <div v-for="i in 6" :key="i"
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm overflow-hidden animate-pulse">
                         <div class="aspect-[4/3] bg-slate-200"></div>
                         <div class="p-6">
                             <div class="h-6 bg-slate-200 rounded mb-3"></div>
@@ -35,7 +37,7 @@
             <div v-else>
                 <!-- Hero Highlight Section -->
                 <div v-if="highlightAlbums.length > 0" class="mb-16">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <span>✨</span> กิจกรรมเด่น
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -87,7 +89,7 @@
                         class="px-5 py-2 rounded-full text-sm font-medium transition-all duration-200"
                         :class="selectedCategory === cat.value
                             ? 'bg-primary-600 text-white shadow-md transform scale-105'
-                            : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-slate-300'">
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300'">
                         {{ cat.label }}
                     </button>
                 </div>
@@ -95,7 +97,7 @@
                 <!-- Gallery Grid -->
                 <div v-if="filteredAlbums.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <NuxtLink v-for="album in filteredAlbums" :key="album._id" :to="`/gallery/${album._id}`"
-                        class="bg-white rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group border border-slate-100">
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group border border-slate-100 dark:border-slate-700">
                         <!-- Cover Image -->
                         <div class="aspect-[4/3] relative overflow-hidden">
                             <NuxtImg :src="album.coverImage || 'https://placehold.co/600x400'" :alt="album.title"
@@ -123,13 +125,14 @@
                         <!-- Content -->
                         <div class="p-6">
                             <h3
-                                class="text-xl font-bold text-slate-800 mb-2 group-hover:text-primary-600 transition-colors line-clamp-1">
+                                class="text-xl font-bold text-slate-800 dark:text-white mb-2 group-hover:text-primary-600 transition-colors line-clamp-1">
                                 {{ album.title }}
                             </h3>
-                            <p class="text-slate-500 text-sm mb-4 line-clamp-2 h-10">
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2 h-10">
                                 {{ album.description }}
                             </p>
-                            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                            <div
+                                class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
                                 <div class="flex items-center text-slate-400 text-sm">
                                     <span>📅 {{ formatDate(album.eventDate) }}</span>
                                 </div>
@@ -143,10 +146,11 @@
                 </div>
 
                 <!-- Empty State -->
-                <div v-else class="text-center py-16 bg-white rounded-xl border border-slate-200 shadow-sm">
+                <div v-else
+                    class="text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                     <div class="text-6xl mb-4">🖼️</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">ไม่พบอัลบั้มรูปภาพ</h3>
-                    <p class="text-slate-500">ลองเปลี่ยนหมวดหมู่ในการค้นหา</p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">ไม่พบอัลบั้มรูปภาพ</h3>
+                    <p class="text-slate-500 dark:text-slate-400">ลองเปลี่ยนหมวดหมู่ในการค้นหา</p>
                 </div>
             </div>
         </div>

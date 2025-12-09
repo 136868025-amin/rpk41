@@ -1,41 +1,44 @@
 <template>
-    <div class="min-h-screen bg-slate-50 pb-12">
+    <div class="min-h-screen bg-slate-50 dark:bg-slate-900 pb-12">
         <div v-if="pending" class="flex justify-center py-24">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
         </div>
 
         <div v-else-if="person" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <!-- Breadcrumb -->
-            <nav class="flex text-sm text-slate-500 mb-6">
+            <nav class="flex text-sm text-slate-500 dark:text-slate-400 mb-6">
                 <NuxtLink to="/" class="hover:text-primary-600">หน้าหลัก</NuxtLink>
                 <span class="mx-2">/</span>
                 <NuxtLink to="/personnel" class="hover:text-primary-600">บุคลากร</NuxtLink>
                 <span class="mx-2">/</span>
-                <span class="text-slate-800">{{ person.name }}</span>
+                <span class="text-slate-800 dark:text-white">{{ person.name }}</span>
             </nav>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Sidebar Profile -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-24">
+                    <div
+                        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden sticky top-24">
                         <div class="aspect-[3/4] relative">
                             <img :src="person.photo || 'https://placehold.co/600x800'" :alt="person.name"
                                 class="w-full h-full object-cover" />
                         </div>
                         <div class="p-6">
-                            <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ person.name }}</h1>
+                            <h1 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">{{ person.name }}</h1>
                             <p class="text-primary-600 font-medium mb-6">{{ person.position }}</p>
 
                             <div class="space-y-4">
-                                <div v-if="person.email" class="flex items-center gap-3 text-slate-600">
+                                <div v-if="person.email"
+                                    class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
                                     <span
-                                        class="w-8 h-8 flex items-center justify-center bg-slate-100 rounded-full">📧</span>
+                                        class="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full">📧</span>
                                     <a :href="`mailto:${person.email}`"
                                         class="hover:text-primary-600 transition-colors">{{ person.email }}</a>
                                 </div>
-                                <div v-if="person.phone" class="flex items-center gap-3 text-slate-600">
+                                <div v-if="person.phone"
+                                    class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
                                     <span
-                                        class="w-8 h-8 flex items-center justify-center bg-slate-100 rounded-full">📞</span>
+                                        class="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full">📞</span>
                                     <a :href="`tel:${person.phone}`" class="hover:text-primary-600 transition-colors">{{
                                         person.phone }}</a>
                                 </div>
@@ -47,17 +50,18 @@
                 <!-- Main Content -->
                 <div class="lg:col-span-2 space-y-8">
                     <!-- Biography / Content -->
-                    <div v-if="person.content" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                        <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <div v-if="person.content"
+                        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8">
+                        <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                             <span>📝</span> ประวัติและผลงาน
                         </h2>
-                        <div class="prose prose-slate max-w-none" v-html="person.content"></div>
+                        <div class="prose prose-slate dark:prose-invert max-w-none" v-html="person.content"></div>
                     </div>
 
                     <!-- Gallery -->
                     <div v-if="person.gallery && person.gallery.length > 0"
-                        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                        <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8">
+                        <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                             <span>📸</span> ภาพกิจกรรม
                         </h2>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -79,7 +83,7 @@
         </div>
 
         <div v-else class="text-center py-24">
-            <h1 class="text-2xl font-bold text-slate-800 mb-2">ไม่พบข้อมูลบุคลากร</h1>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">ไม่พบข้อมูลบุคลากร</h1>
             <NuxtLink to="/personnel" class="text-primary-600 hover:underline">กลับไปหน้าบุคลากร</NuxtLink>
         </div>
     </div>

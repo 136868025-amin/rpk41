@@ -2,12 +2,27 @@
   <div>
     <AppLoader />
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage :transition="pageTransition" />
     </NuxtLayout>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useConfigStore } from '~/stores/config'
+
+const route = useRoute()
+
+// Disable transitions for admin pages to avoid Vue warnings with NuxtLayout
+const pageTransition = computed(() => {
+  if (route.path.startsWith('/admin')) {
+    return false
+  }
+  return {
+    name: 'page',
+    mode: 'out-in' as const
+  }
+})
+
 useHead({
   titleTemplate: (titleChunk) => {
     return titleChunk ? `${titleChunk} - โรงเรียนราชประชานุเคราะห์ ๔๑` : 'โรงเรียนราชประชานุเคราะห์ ๔๑ จังหวัดยะลา'
@@ -19,14 +34,13 @@ useSeoMeta({
   ogTitle: 'โรงเรียนราชประชานุเคราะห์ ๔๑ จังหวัดยะลา',
   description: 'มุ่งมั่นพัฒนาคุณภาพการศึกษา สร้างคนดี มีคุณธรรม จริยธรรม นำสังคม พร้อมก้าวสู่ประชาคมอาเซียน',
   ogDescription: 'มุ่งมั่นพัฒนาคุณภาพการศึกษา สร้างคนดี มีคุณธรรม จริยธรรม นำสังคม พร้อมก้าวสู่ประชาคมอาเซียน',
-  ogImage: 'https://rpk41.vercel.app/images/banners/banner-1.png', // Fallback image
+  ogImage: 'https://rpk41.vercel.app/images/banners/banner-1.png',
   twitterCard: 'summary_large_image',
 })
 
 // Initialize global config (non-blocking - loads in background)
-import { useConfigStore } from '~/stores/config'
 const configStore = useConfigStore()
-callOnce(configStore.fetchConfig) // Removed await - page renders immediately
+callOnce(configStore.fetchConfig)
 
 // Initialize loader
 const { startLoading } = useLoader()

@@ -7,7 +7,7 @@
                 class="absolute inset-0 transition-opacity duration-1000"
                 :class="currentIndex === index ? 'opacity-100 z-10' : 'opacity-0 z-0'">
                 <NuxtImg :src="banner.imageUrl" :alt="banner.title || 'Banner'" class="w-full h-full object-cover"
-                    :loading="index === 0 ? 'eager' : 'lazy'" />
+                    :loading="index === 0 ? 'eager' : 'lazy'" :preload="index === 0" />
             </div>
             <!-- Gradient Overlay -->
             <div class="absolute inset-0 z-20 bg-gradient-to-r from-primary-600/90 to-primary-800/90"></div>

@@ -1,19 +1,21 @@
 <template>
-    <div class="min-h-screen bg-slate-50 pb-12">
+    <div class="min-h-screen bg-slate-50 dark:bg-slate-900 pb-12">
         <!-- Header -->
-        <div class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">ปฏิทินกิจกรรม</h1>
-                        <p class="text-slate-600">ตารางกิจกรรมและเหตุการณ์สำคัญของโรงเรียน</p>
+                        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-2">ปฏิทินกิจกรรม
+                        </h1>
+                        <p class="text-slate-600 dark:text-slate-300">ตารางกิจกรรมและเหตุการณ์สำคัญของโรงเรียน</p>
                     </div>
                     <!-- Legend -->
                     <div class="flex flex-wrap gap-3">
                         <div v-for="(color, type) in eventColors" :key="type"
-                            class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                            class="flex items-center gap-2 bg-slate-50 dark:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-600">
                             <span class="w-3 h-3 rounded-full" :style="{ backgroundColor: color }"></span>
-                            <span class="text-sm text-slate-600 capitalize">{{ getEventLabel(type) }}</span>
+                            <span class="text-sm text-slate-600 dark:text-slate-300 capitalize">{{ getEventLabel(type)
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -24,8 +26,9 @@
             <div class="grid lg:grid-cols-4 gap-8">
                 <!-- Sidebar Filters -->
                 <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <div
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+                        <h3 class="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
                             <span class="text-xl">🔍</span> กรองข้อมูล
                         </h3>
                         <div class="space-y-3">
@@ -41,8 +44,10 @@
                                         <polyline points="20 6 9 17 4 12"></polyline>
                                     </svg>
                                 </div>
-                                <span class="text-slate-600 group-hover:text-slate-900 transition-colors">{{ label
-                                }}</span>
+                                <span
+                                    class="text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{{
+                                        label
+                                    }}</span>
                             </label>
                         </div>
                     </div>
@@ -52,7 +57,8 @@
 
                 <!-- Main Calendar -->
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 calendar-wrapper">
+                    <div
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 calendar-wrapper">
                         <!-- Loading Skeleton -->
                         <div v-if="calendarPlugins.length === 0" class="animate-pulse">
                             <div class="h-10 bg-slate-200 rounded mb-4"></div>
@@ -78,14 +84,16 @@
 
                 <!-- Modal Content -->
                 <div
-                    class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+                    class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
                     <!-- Header -->
-                    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <div
+                        class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-700/50">
                         <div class="flex items-center gap-3">
                             <span class="w-3 h-3 rounded-full"
                                 :style="{ backgroundColor: selectedEvent.backgroundColor }"></span>
-                            <span class="text-sm font-medium text-slate-500 uppercase tracking-wider">{{
-                                getEventLabel(selectedEvent.extendedProps.type) }}</span>
+                            <span
+                                class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{
+                                    getEventLabel(selectedEvent.extendedProps.type) }}</span>
                         </div>
                         <button @click="closeModal"
                             class="text-slate-400 hover:text-slate-600 transition-colors p-1 hover:bg-slate-100 rounded-full">
@@ -99,7 +107,8 @@
 
                     <!-- Body -->
                     <div class="p-6 overflow-y-auto custom-scrollbar">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-6 leading-tight">{{ selectedEvent.title }}</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 leading-tight">{{
+                            selectedEvent.title }}</h3>
 
                         <div class="space-y-6">
                             <!-- Date -->
@@ -113,9 +122,10 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-900">วันและเวลา</p>
-                                    <p class="text-slate-600 mt-0.5">{{ formatDateRange(selectedEvent.start,
-                                        selectedEvent.end) }}</p>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white">วันและเวลา</p>
+                                    <p class="text-slate-600 dark:text-slate-300 mt-0.5">{{
+                                        formatDateRange(selectedEvent.start,
+                                            selectedEvent.end) }}</p>
                                 </div>
                             </div>
 
@@ -157,7 +167,8 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                    <div
+                        class="px-6 py-4 bg-slate-50 dark:bg-slate-700 border-t border-slate-100 dark:border-slate-600 flex justify-end">
                         <button @click="closeModal"
                             class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 hover:border-slate-300 font-medium transition-all shadow-sm">
                             ปิดหน้าต่าง
@@ -314,7 +325,7 @@ useHead({
 </script>
 
 <style>
-/* Custom Calendar Styles */
+/* Custom Calendar Styles - Light Mode */
 .calendar-wrapper {
     --fc-border-color: #e2e8f0;
     --fc-button-text-color: #475569;
@@ -328,6 +339,25 @@ useHead({
     --fc-event-border-color: #3b82f6;
     --fc-today-bg-color: #f0f9ff;
     --fc-neutral-bg-color: #f8fafc;
+    --fc-page-bg-color: #ffffff;
+    --fc-neutral-text-color: #64748b;
+}
+
+/* Dark Mode Variables */
+:root.dark .calendar-wrapper,
+.dark .calendar-wrapper {
+    --fc-border-color: #334155;
+    --fc-button-text-color: #e2e8f0;
+    --fc-button-bg-color: #1e293b;
+    --fc-button-border-color: #334155;
+    --fc-button-hover-bg-color: #334155;
+    --fc-button-hover-border-color: #475569;
+    --fc-button-active-bg-color: #475569;
+    --fc-button-active-border-color: #64748b;
+    --fc-today-bg-color: rgba(59, 130, 246, 0.1);
+    --fc-neutral-bg-color: #1e293b;
+    --fc-page-bg-color: #0f172a;
+    --fc-neutral-text-color: #94a3b8;
 }
 
 .fc {
@@ -339,6 +369,10 @@ useHead({
     font-size: 1.25rem !important;
     font-weight: 700 !important;
     color: #1e293b !important;
+}
+
+.dark .fc-toolbar-title {
+    color: #f1f5f9 !important;
 }
 
 .fc-button {
@@ -362,11 +396,20 @@ useHead({
     color: #1e293b !important;
 }
 
+.dark .fc-button-primary:hover {
+    color: #f1f5f9 !important;
+}
+
 .fc-button-primary:not(:disabled).fc-button-active,
 .fc-button-primary:not(:disabled):active {
     background-color: var(--fc-button-active-bg-color) !important;
     border-color: var(--fc-button-active-border-color) !important;
     color: #0f172a !important;
+}
+
+.dark .fc-button-primary:not(:disabled).fc-button-active,
+.dark .fc-button-primary:not(:disabled):active {
+    color: #f1f5f9 !important;
 }
 
 /* Day Grid */
@@ -376,12 +419,34 @@ useHead({
     padding: 0.5rem !important;
 }
 
+.dark .fc-daygrid-day-number {
+    color: #94a3b8 !important;
+}
+
 .fc-col-header-cell-cushion {
     font-weight: 600 !important;
     color: #475569 !important;
     padding: 0.75rem 0 !important;
 }
 
+.dark .fc-col-header-cell-cushion {
+    color: #cbd5e1 !important;
+}
+
+/* Day cells */
+.dark .fc-daygrid-day {
+    background-color: transparent !important;
+}
+
+.dark .fc-day-today {
+    background-color: var(--fc-today-bg-color) !important;
+}
+
+.dark .fc-daygrid-day-frame {
+    border-color: var(--fc-border-color) !important;
+}
+
+/* Events */
 .fc-event {
     border-radius: 0.25rem !important;
     padding: 2px 4px !important;
@@ -405,7 +470,53 @@ useHead({
     background-color: #f8fafc !important;
 }
 
+.dark .fc-list-day-cushion {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+}
+
 .fc-list-event:hover td {
     background-color: #f1f5f9 !important;
+}
+
+.dark .fc-list-event:hover td {
+    background-color: #334155 !important;
+}
+
+.dark .fc-list-event-title,
+.dark .fc-list-event-time {
+    color: #e2e8f0 !important;
+}
+
+/* Table borders */
+.dark .fc-scrollgrid,
+.dark .fc-scrollgrid-section>td,
+.dark .fc th,
+.dark .fc td {
+    border-color: var(--fc-border-color) !important;
+}
+
+/* More events link */
+.dark .fc-daygrid-more-link {
+    color: #60a5fa !important;
+}
+
+/* Scrollbar for dark mode */
+.dark .fc-scroller::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dark .fc-scroller::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+.dark .fc-scroller::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+
+.dark .fc-scroller::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
 }
 </style>

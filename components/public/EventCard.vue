@@ -1,18 +1,20 @@
 <template>
-    <div class="bg-white rounded-xl p-4 hover:shadow-md transition-shadow border-l-4 border-primary-500">
+    <div
+        class="bg-white dark:bg-slate-800 rounded-xl p-4 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 border-l-4 border-primary-500 hover:border-primary-600 cursor-pointer group">
         <!-- Date Badge -->
         <div class="flex items-start gap-4">
             <div class="flex-shrink-0 text-center">
-                <div class="w-14 h-14 bg-primary-100 rounded-lg flex flex-col items-center justify-center">
-                    <div class="text-2xl font-bold text-primary-700">{{ day }}</div>
-                    <div class="text-xs text-primary-600">{{ month }}</div>
+                <div
+                    class="w-14 h-14 bg-primary-100 dark:bg-primary-900 rounded-lg flex flex-col items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <div class="text-2xl font-bold text-primary-700 dark:text-primary-400">{{ day }}</div>
+                    <div class="text-xs text-primary-600 dark:text-primary-300">{{ month }}</div>
                 </div>
             </div>
 
             <!-- Event Info -->
             <div class="flex-1 min-w-0">
-                <h4 class="font-bold text-slate-800 mb-1 line-clamp-1">{{ event.title }}</h4>
-                <div class="space-y-1 text-sm text-slate-600">
+                <h4 class="font-bold text-slate-800 dark:text-white mb-1 line-clamp-1">{{ event.title }}</h4>
+                <div class="space-y-1 text-sm text-slate-600 dark:text-slate-400">
                     <div class="flex items-center gap-2">
                         <span>🕐</span>
                         <span>{{ formatTime(event.startDate) }}</span>
