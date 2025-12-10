@@ -97,8 +97,9 @@
                         <NuxtLink v-for="person in otherAdmins" :key="person._id" :to="`/personnel/${person._id}`"
                             class="bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group p-4 border border-slate-100 dark:border-slate-700 flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-50 flex-shrink-0">
-                                <NuxtImg :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
-                                    class="w-full h-full object-cover" loading="lazy" />
+                                <NuxtImg
+                                    :src="optimizePhoto(person.photo, 'thumbnail') || 'https://placehold.co/400x400'"
+                                    :alt="person.name" class="w-full h-full object-cover" loading="lazy" />
                             </div>
                             <div>
                                 <h3
@@ -122,7 +123,9 @@
                             :to="`/personnel/${person._id}`"
                             class="bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group p-4 border border-slate-100 dark:border-slate-700 flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-50 flex-shrink-0">
-                                <NuxtImg :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
+                                <NuxtImg
+                                    :src="optimizePhoto(person.photo, 'thumbnail') || 'https://placehold.co/400x400'"
+                                    :alt="person.name"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     loading="lazy" />
                             </div>
@@ -148,7 +151,9 @@
                             :to="`/personnel/${person._id}`"
                             class="bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group p-4 border border-slate-100 dark:border-slate-700 flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-50 flex-shrink-0">
-                                <NuxtImg :src="person.photo || 'https://placehold.co/400x400'" :alt="person.name"
+                                <NuxtImg
+                                    :src="optimizePhoto(person.photo, 'thumbnail') || 'https://placehold.co/400x400'"
+                                    :alt="person.name"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     loading="lazy" />
                             </div>
@@ -227,4 +232,19 @@ useHead({
         { name: 'description', content: 'คณะผู้บริหารและบุคลากรโรงเรียนราชประชานุเคราะห์ 41' }
     ]
 })
+
+// Optimize personnel photos with Cloudinary transformations
+const { cloudinaryPresets } = await import('~/composables/useCloudinaryUrl')
+const optimizePhoto = (url: string, size: 'thumbnail' | 'avatar' | 'large' = 'avatar') => {
+    if (!url || !url.includes('cloudinary.com')) return url
+    const preset = {
+        thumbnail: cloudinaryPresets.thumbnail,
+        avatar: cloudinaryPresets.avatar,
+        large: (u: string) => {
+            // For director - larger image
+            return u.replace('/image/upload/', '/image/upload/w_600,h_800,c_fill,q_auto,f_auto/')
+        }
+    }
+    return preset[size](url)
+}
 </script>

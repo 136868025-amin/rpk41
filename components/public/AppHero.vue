@@ -29,7 +29,7 @@
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <NuxtLink to="/about"
-                    class="px-8 py-3 bg-white text-primary-600 rounded-lg font-bold hover:bg-primary-50 transition-colors shadow-lg">
+                    class="px-8 py-3 bg-white text-primary-700 rounded-lg font-bold hover:bg-primary-50 transition-colors shadow-lg">
                     เกี่ยวกับเรา
                 </NuxtLink>
                 <NuxtLink to="/news"

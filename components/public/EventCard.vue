@@ -7,7 +7,7 @@
                 <div
                     class="w-14 h-14 bg-primary-100 dark:bg-primary-900 rounded-lg flex flex-col items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     <div class="text-2xl font-bold text-primary-700 dark:text-primary-400">{{ day }}</div>
-                    <div class="text-xs text-primary-600 dark:text-primary-300">{{ month }}</div>
+                    <div class="text-xs text-primary-700 dark:text-primary-300">{{ month }}</div>
                 </div>
             </div>
 
