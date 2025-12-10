@@ -1,5 +1,5 @@
-import { randomUUID } from 'crypto'
 import { verifyToken } from '~/server/utils/jwt'
+import { uploadToCloudinary } from '~/server/utils/cloudinary'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -34,6 +34,11 @@ export default defineEventHandler(async (event) => {
 
     // 3. Process each file
     for (const file of files) {
+      // Skip if no data
+      if (!file.data || !file.type) {
+        continue
+      }
+
       // Validate file type
       const allowedTypes = [
         'image/jpeg', 'image/png', 'image/webp', 'image/gif',
@@ -44,24 +49,44 @@ export default defineEventHandler(async (event) => {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       ]
       
-      if (!allowedTypes.includes(file.type || '')) {
+      if (!allowedTypes.includes(file.type)) {
         errors.push(`File ${file.filename} has invalid type: ${file.type}`)
-        continue // Skip invalid files
+        continue
       }
 
-      // Validate file size (e.g., max 5MB)
-      if (file.data.length > 5 * 1024 * 1024) {
-        errors.push(`File ${file.filename} is too large (max 5MB)`)
-        continue // Skip too large files
+      // Validate file size (max 10MB)
+      const maxSize = 10 * 1024 * 1024
+      if (file.data.length > maxSize) {
+        errors.push(`File ${file.filename} is too large (max 10MB)`)
+        continue
       }
 
-      // Convert to Base64 (Vercel File System workaround)
-      const base64String = `data:${file.type};base64,${file.data.toString('base64')}`
+      // Determine resource type for Cloudinary
+      const isImage = file.type.startsWith('image/')
+      const resourceType = isImage ? 'image' : 'raw'
 
-      uploadedFiles.push({
-        url: base64String, // Return Base64 string as URL
-        originalName: file.filename,
-      })
+      try {
+        // Convert to Base64 Data URL for Cloudinary upload
+        const base64Data = `data:${file.type};base64,${file.data.toString('base64')}`
+        
+        // Upload to Cloudinary
+        const result = await uploadToCloudinary(base64Data, {
+          folder: 'rpg-school',
+          resourceType: resourceType as 'image' | 'raw',
+          originalFilename: file.filename || undefined
+        })
+
+        uploadedFiles.push({
+          url: result.url,
+          publicId: result.publicId,
+          originalName: file.filename,
+          format: result.format,
+          bytes: result.bytes
+        })
+      } catch (uploadError: any) {
+        console.error(`Failed to upload ${file.filename}:`, uploadError)
+        errors.push(`Failed to upload ${file.filename}: ${uploadError.message}`)
+      }
     }
 
     if (uploadedFiles.length === 0) {
@@ -74,7 +99,9 @@ export default defineEventHandler(async (event) => {
     // Return first file URL for simplicity (or array if needed)
     return {
       url: uploadedFiles[0].url,
+      publicId: uploadedFiles[0].publicId,
       files: uploadedFiles,
+      errors: errors.length > 0 ? errors : undefined
     }
   } catch (error: any) {
     console.error('Upload Error:', error)

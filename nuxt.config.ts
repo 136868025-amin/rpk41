@@ -1,4 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { config } from 'dotenv'
+
+// Load .env.local explicitly for process.env access in nuxt.config.ts
+config({ path: '.env.local' })
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -72,9 +77,16 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/ratchaprachanukroh41',
+    // MongoDB - reads from NUXT_MONGODB_URI or MONGODB_URI
+    mongodbUri: process.env.NUXT_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/ratchaprachanukroh41',
+    // Cloudinary credentials (server-side only)
+    // Reads from NUXT_CLOUDINARY_* or CLOUDINARY_* env vars
+    cloudinaryUrl: process.env.NUXT_CLOUDINARY_URL || process.env.CLOUDINARY_URL || '',
+    cloudinaryCloudName: process.env.NUXT_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME || '',
+    cloudinaryApiKey: process.env.NUXT_CLOUDINARY_API_KEY || process.env.CLOUDINARY_API_KEY || '',
+    cloudinaryApiSecret: process.env.NUXT_CLOUDINARY_API_SECRET || process.env.CLOUDINARY_API_SECRET || '',
     public: {
-      seedDb: process.env.SEED_DB || 'false',
+      seedDb: process.env.NUXT_PUBLIC_SEED_DB || process.env.SEED_DB || 'false',
     },
   },
   
