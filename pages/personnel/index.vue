@@ -197,8 +197,10 @@ interface GroupedPersonnel {
     support_staff: Personnel[]
 }
 
-// Fetch Personnel Grouped
-const { data: response, pending } = await useFetch<{ data: GroupedPersonnel }>('/api/personnel?grouped=true')
+// Fetch Personnel Grouped (disable cache to always get fresh data)
+const { data: response, pending, refresh } = await useFetch<{ data: GroupedPersonnel }>('/api/personnel?grouped=true', {
+    getCachedData: () => undefined // Force fresh data every time
+})
 const groupedPersonnel = computed(() => response.value?.data || { administrators: [], teachers: [], support_staff: [] })
 
 // Computed for Executive Layout

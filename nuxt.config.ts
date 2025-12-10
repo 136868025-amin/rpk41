@@ -101,7 +101,21 @@ export default defineNuxtConfig({
     compressPublicAssets: true,
     prerender: {
       crawlLinks: true,
-      ignore: ['/admin', '/admin/**'],
+      // Exclude dynamic content pages from prerendering
+      ignore: ['/admin', '/admin/**', '/personnel', '/personnel/**', '/news/**', '/gallery/**', '/documents/**'],
+    },
+    // Route rules for caching behavior
+    routeRules: {
+      // API routes - no caching, always fresh
+      '/api/**': { cache: false },
+      // Dynamic content pages - no caching
+      '/personnel/**': { cache: false, swr: false },
+      '/news/**': { cache: false, swr: false },
+      '/gallery/**': { cache: false, swr: false },
+      '/documents/**': { cache: false, swr: false },
+      // Static pages - can be cached
+      '/about/**': { cache: { maxAge: 3600 } },
+      '/contact/**': { cache: { maxAge: 3600 } },
     },
   },
 })

@@ -109,8 +109,10 @@ interface Personnel {
     gallery?: string[]
 }
 
-// Fetch Personnel Detail
-const { data: response, pending } = await useFetch<{ data: Personnel }>(`/api/personnel/${id}`)
+// Fetch Personnel Detail (disable cache to always get fresh data)
+const { data: response, pending } = await useFetch<{ data: Personnel }>(`/api/personnel/${id}`, {
+    getCachedData: () => undefined
+})
 const person = computed(() => response.value?.data)
 
 // Lightbox (Placeholder)
