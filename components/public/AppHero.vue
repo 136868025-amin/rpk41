@@ -42,6 +42,7 @@
         <!-- Slide Indicators -->
         <div v-if="banners.length > 1" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex gap-2">
             <button v-for="(_, index) in banners" :key="index" @click="goToSlide(index)"
+                :aria-label="`ไปยังสไลด์ที่ ${index + 1}`"
                 class="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer" :class="currentIndex === index
                     ? 'bg-white w-8'
                     : 'bg-white/50 hover:bg-white/80'">
@@ -49,13 +50,13 @@
         </div>
 
         <!-- Navigation Arrows -->
-        <button v-if="banners.length > 1" @click="prevSlide"
+        <button v-if="banners.length > 1" @click="prevSlide" aria-label="สไลด์ก่อนหน้า"
             class="absolute left-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/20 hover:bg-white/40 transition-colors backdrop-blur-sm cursor-pointer">
             <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
         </button>
-        <button v-if="banners.length > 1" @click="nextSlide"
+        <button v-if="banners.length > 1" @click="nextSlide" aria-label="สไลด์ถัดไป"
             class="absolute right-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/20 hover:bg-white/40 transition-colors backdrop-blur-sm cursor-pointer">
             <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

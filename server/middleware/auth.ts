@@ -20,6 +20,9 @@ export default defineEventHandler(async (event) => {
       '/api/calendar',
       '/api/config',
       '/api/personnel',
+      '/api/announcements',
+      '/api/documents',
+      '/api/search',
     ]
     if (publicEndpoints.some(endpoint => event.path.startsWith(endpoint))) {
       return

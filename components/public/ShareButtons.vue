@@ -3,7 +3,7 @@
         <span v-if="showLabel" class="text-sm text-slate-500 dark:text-slate-400">แชร์:</span>
 
         <!-- Facebook Share -->
-        <button @click="shareToFacebook"
+        <button @click="shareToFacebook" aria-label="แชร์ไปยัง Facebook"
             class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all hover:scale-110 shadow-md"
             title="แชร์ไปยัง Facebook">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -13,7 +13,7 @@
         </button>
 
         <!-- Line Share -->
-        <button @click="shareToLine"
+        <button @click="shareToLine" aria-label="แชร์ไปยัง Line"
             class="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 hover:bg-green-600 text-white transition-all hover:scale-110 shadow-md"
             title="แชร์ไปยัง Line">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -23,7 +23,7 @@
         </button>
 
         <!-- Copy Link -->
-        <button @click="copyLink"
+        <button @click="copyLink" aria-label="คัดลอกลิงก์"
             class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-all hover:scale-110 shadow-md"
             :title="copied ? 'คัดลอกแล้ว!' : 'คัดลอกลิงก์'">
             <svg v-if="!copied" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

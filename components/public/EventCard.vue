@@ -13,7 +13,7 @@
 
             <!-- Event Info -->
             <div class="flex-1 min-w-0">
-                <h4 class="font-bold text-slate-800 dark:text-white mb-1 line-clamp-1">{{ event.title }}</h4>
+                <h3 class="font-bold text-slate-800 dark:text-white mb-1 line-clamp-1">{{ event.title }}</h3>
                 <div class="space-y-1 text-sm text-slate-600 dark:text-slate-400">
                     <div class="flex items-center gap-2">
                         <span>🕐</span>

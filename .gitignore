@@ -26,3 +26,6 @@ logs
 .env
 .env.*
 !.env.example
+
+# Lighthouse
+rpk41.vercel.app_2025-12-10_12-55-45.json

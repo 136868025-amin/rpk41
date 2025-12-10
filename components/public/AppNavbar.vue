@@ -42,7 +42,7 @@
                             <input v-if="isSearchOpen" v-model="searchQuery" @keyup.enter="handleSearch" type="text"
                                 class="w-48 px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:outline-none animate-fade-in"
                                 placeholder="ค้นหา..." ref="searchInput" />
-                            <button @click="toggleSearch"
+                            <button @click="toggleSearch" aria-label="ค้นหา"
                                 class="p-2 text-slate-600 hover:text-primary-600 transition-colors dark:text-slate-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
@@ -55,7 +55,7 @@
                 </div>
 
                 <!-- Dark Mode Toggle - Desktop Only (lg+) -->
-                <button @click="toggleDarkMode"
+                <button @click="toggleDarkMode" aria-label="เปลี่ยนโหมดสว่าง/มืด"
                     class="hidden lg:block p-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-primary-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-700">
                     <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
@@ -72,7 +72,7 @@
                 <!-- Mobile/Tablet Menu Button (shows on < lg) -->
                 <div class="flex lg:hidden items-center gap-2">
                     <!-- Dark mode toggle for tablet/mobile only -->
-                    <button @click="toggleDarkMode"
+                    <button @click="toggleDarkMode" aria-label="เปลี่ยนโหมดสว่าง/มืด"
                         class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors">
                         <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -86,7 +86,7 @@
                         </svg>
                     </button>
 
-                    <button @click="toggleMobileMenu"
+                    <button @click="toggleMobileMenu" aria-label="เปิด/ปิดเมนู"
                         class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                         <svg class="w-6 h-6 text-slate-600 dark:text-slate-300 transition-transform"
                             :class="{ 'rotate-90': isMobileMenuOpen }" fill="none" viewBox="0 0 24 24"
@@ -112,7 +112,7 @@
                             <input v-model="searchQuery" @keyup.enter="handleSearch" type="text"
                                 class="w-full px-4 py-2.5 text-sm border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none"
                                 placeholder="ค้นหา..." />
-                            <button @click="handleSearch"
+                            <button @click="handleSearch" aria-label="ค้นหา"
                                 class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-primary-600 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
